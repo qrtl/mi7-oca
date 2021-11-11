@@ -5,7 +5,7 @@
 {
     "name": "eCommerce: charge payment fee",
     "summary": "Payment fee charged to customer",
-    "version": "10.0.1.0.1",
+    "version": "10.0.1.0.2",
     "development_status": "Beta",
     "category": "Website",
     "website": "https://github.com/OCA/e-commerce",
@@ -14,7 +14,7 @@
     "application": False,
     "installable": True,
     "depends": [
-        "pro_mi7_website_sale_ec"
+        "website_sale",
     ],
     "data": [
         "views/payment_view.xml",

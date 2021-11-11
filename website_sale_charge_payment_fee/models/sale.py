@@ -7,11 +7,10 @@ from odoo import models, fields
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    def update_fee_line(self,tx):
+    def update_fee_line(self, acquirer):
         for line in self.order_line:
             if line.payment_fee_line:
                 line.unlink()
-        acquirer = tx.acquirer_id
         if acquirer.charge_fee:
             if acquirer.charge_fee_type == 'fixed':
                 price = acquirer.charge_fee_fixed_price
@@ -26,8 +25,6 @@ class SaleOrder(models.Model):
                 price = (
                     acquirer.charge_fee_percentage / 100.0
                 ) * self.amount_total
-
-            order_total = self.amount_total
             self.env['sale.order.line'].create({
                 'order_id': self.id,
                 'payment_fee_line': True,
@@ -40,10 +37,8 @@ class SaleOrder(models.Model):
                     (6, 0, [t.id for t in acquirer.charge_fee_tax_ids])
                 ],
             })
-            new_order_total = self.amount_total
-            tx.amount = tx.amount + new_order_total - order_total
 
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
-    payment_fee_line = fields.Boolean("Payment fee line", readonly=False)
+    payment_fee_line = fields.Boolean("Payment fee line", readonly=True)
