@@ -11,13 +11,8 @@
 Next
 ~~~~
 
-* [IMP] Dont' start the Jobrunner if root channel's capacity is explicitly set
-  to 0 (backport from `#148 <https://github.com/OCA/queue/pull/148>`_)
-* [ADD] Default "related action" for jobs, opening a form or list view (when
-  the job is linked to respectively one record on several).
-  (`#79 <https://github.com/OCA/queue/pull/79>`_, backport from `#46 <https://github.com/OCA/queue/pull/46>`_)
-
-10.0.1.0.0
-~~~~~~~~~~
-
-* Starting the changelog from there
+* [ADD] Run jobrunner as a worker process instead of a thread in the main
+  process (when running with --workers > 0)
+* [REF] ``@job`` and ``@related_action`` deprecated, any method can be delayed,
+  and configured using ``queue.job.function`` records
+* [MIGRATION] from 13.0 branched at rev. e24ff4b

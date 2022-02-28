@@ -2,12 +2,12 @@
 
   * Adjust environment variables (optional):
 
-    - ``ODOO_QUEUE_JOB_CHANNELS=root:4`` or any other channels configuration. 
+    - ``ODOO_QUEUE_JOB_CHANNELS=root:4`` or any other channels configuration.
       The default is ``root:1``
 
     - if ``xmlrpc_port`` is not set: ``ODOO_QUEUE_JOB_PORT=8069``
 
-  * Start Odoo with ``--load=web,web_kanban,queue_job``
+  * Start Odoo with ``--load=web,queue_job``
     and ``--workers`` greater than 1. [1]_
 
 

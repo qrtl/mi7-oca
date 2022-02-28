@@ -1,24 +1,19 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2015-2016 ACSONE SA/NV (<http://acsone.eu>)
 # Copyright 2013-2016 Camptocamp SA
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html)
 
 import logging
 import traceback
-from cStringIO import StringIO
+from io import StringIO
 
 from psycopg2 import OperationalError
+from werkzeug.exceptions import Forbidden
 
-import odoo
-from odoo import _, http, tools
+from odoo import SUPERUSER_ID, _, api, http, registry, tools
 from odoo.service.model import PG_CONCURRENCY_ERRORS_TO_RETRY
 
-from ..job import Job, ENQUEUED
-from ..exception import (NoSuchJobError,
-                         NotReadableJobError,
-                         RetryableJobError,
-                         FailedJobError,
-                         NothingToDoJob)
+from ..exception import FailedJobError, NothingToDoJob, RetryableJobError
+from ..job import ENQUEUED, Job
 
 _logger = logging.getLogger(__name__)
 
@@ -26,78 +21,49 @@ PG_RETRY = 5  # seconds
 
 
 class RunJobController(http.Controller):
-
-    def _load_job(self, env, job_uuid):
-        """ Reload a job from the backend """
-        try:
-            job = Job.load(env, job_uuid)
-        except NoSuchJobError:
-            # just skip it
-            job = None
-        except NotReadableJobError:
-            _logger.exception('Could not read job: %s', job_uuid)
-            raise
-        return job
-
     def _try_perform_job(self, env, job):
         """Try to perform the job."""
-
-        # if the job has been manually set to DONE or PENDING,
-        # or if something tries to run a job that is not enqueued
-        # before its execution, stop
-        if job.state != ENQUEUED:
-            _logger.warning('job %s is in state %s '
-                            'instead of enqueued in /runjob',
-                            job.uuid, job.state)
-            return
-
-        # TODO: set_started should be done atomically with
-        #       update queue_job set=state=started
-        #       where state=enqueid and id=
         job.set_started()
         job.store()
-        http.request.env.cr.commit()
+        env.cr.commit()
+        _logger.debug("%s started", job)
 
-        _logger.debug('%s started', job)
         job.perform()
         job.set_done()
         job.store()
-        http.request.env.cr.commit()
-        _logger.debug('%s done', job)
+        env["base"].flush()
+        env.cr.commit()
+        _logger.debug("%s done", job)
 
-    @http.route('/queue_job/session', type='http', auth="none")
-    def session(self):
-        """ Used by the jobrunner to spawn a session
-
-        The queue jobrunner uses anonymous sessions when it calls
-        ``/queue_job/runjob``.  To avoid having thousands of anonymous
-        sessions, before running jobs, it creates a ``requests.Session``
-        and does a GET on ``/queue_job/session``, providing it a cookie
-        which will be used for subsequent calls to runjob.
-        """
-        return ''
-
-    @http.route('/queue_job/runjob', type='http', auth='none')
+    @http.route("/queue_job/runjob", type="http", auth="none", save_session=False)
     def runjob(self, db, job_uuid, **kw):
         http.request.session.db = db
-        env = http.request.env(user=odoo.SUPERUSER_ID)
+        env = http.request.env(user=SUPERUSER_ID)
 
         def retry_postpone(job, message, seconds=None):
-
-            job.env.cr.rollback()
             job.env.clear()
-            with odoo.api.Environment.manage():
-                with odoo.registry(job.env.cr.dbname).cursor() as new_cr:
-                    job.env = job.env(cr=new_cr)
-                    job.postpone(result=message, seconds=seconds)
-                    job.set_pending(reset_retry=False)
-                    job.store()
-                    new_cr.commit()
+            with registry(job.env.cr.dbname).cursor() as new_cr:
+                job.env = api.Environment(new_cr, SUPERUSER_ID, {})
+                job.postpone(result=message, seconds=seconds)
+                job.set_pending(reset_retry=False)
+                job.store()
 
-        job = self._load_job(env, job_uuid)
-        if job is None:
+        # ensure the job to run is in the correct state and lock the record
+        env.cr.execute(
+            "SELECT state FROM queue_job WHERE uuid=%s AND state=%s FOR UPDATE",
+            (job_uuid, ENQUEUED),
+        )
+        if not env.cr.fetchone():
+            _logger.warning(
+                "was requested to run job %s, but it does not exist, "
+                "or is not in state %s",
+                job_uuid,
+                ENQUEUED,
+            )
             return ""
-        env.cr.commit()
+
+        job = Job.load(env, job_uuid)
+        assert job and job.state == ENQUEUED
 
         try:
             try:
@@ -108,35 +74,66 @@ class RunJobController(http.Controller):
                 if err.pgcode not in PG_CONCURRENCY_ERRORS_TO_RETRY:
                     raise
 
-                retry_postpone(job, tools.ustr(err.pgerror, errors='replace'),
-                               seconds=PG_RETRY)
-                _logger.debug('%s OperationalError, postponed', job)
+                retry_postpone(
+                    job, tools.ustr(err.pgerror, errors="replace"), seconds=PG_RETRY
+                )
+                _logger.debug("%s OperationalError, postponed", job)
 
         except NothingToDoJob as err:
-            if unicode(err):
-                msg = unicode(err)
+            if str(err):
+                msg = str(err)
             else:
-                msg = _('Job interrupted and set to Done: nothing to do.')
+                msg = _("Job interrupted and set to Done: nothing to do.")
             job.set_done(msg)
             job.store()
             env.cr.commit()
 
         except RetryableJobError as err:
             # delay the job later, requeue
-            retry_postpone(job, unicode(err), seconds=err.seconds)
-            _logger.debug('%s postponed', job)
+            retry_postpone(job, str(err), seconds=err.seconds)
+            _logger.debug("%s postponed", job)
 
         except (FailedJobError, Exception):
             buff = StringIO()
             traceback.print_exc(file=buff)
             _logger.error(buff.getvalue())
             job.env.clear()
-            with odoo.api.Environment.manage():
-                with odoo.registry(job.env.cr.dbname).cursor() as new_cr:
-                    job.env = job.env(cr=new_cr)
-                    job.set_failed(exc_info=buff.getvalue())
-                    job.store()
-                    new_cr.commit()
+            with registry(job.env.cr.dbname).cursor() as new_cr:
+                job.env = api.Environment(new_cr, SUPERUSER_ID, {})
+                job.set_failed(exc_info=buff.getvalue())
+                job.store()
             raise
 
         return ""
+
+    @http.route("/queue_job/create_test_job", type="http", auth="user")
+    def create_test_job(
+        self, priority=None, max_retries=None, channel="root", description="Test job"
+    ):
+        if not http.request.env.user.has_group("base.group_erp_manager"):
+            raise Forbidden(_("Access Denied"))
+
+        if priority is not None:
+            try:
+                priority = int(priority)
+            except ValueError:
+                priority = None
+
+        if max_retries is not None:
+            try:
+                max_retries = int(max_retries)
+            except ValueError:
+                max_retries = None
+
+        delayed = (
+            http.request.env["queue.job"]
+            .with_delay(
+                priority=priority,
+                max_retries=max_retries,
+                channel=channel,
+                description=description,
+            )
+            ._test_job()
+        )
+
+        return delayed.db_record().uuid
