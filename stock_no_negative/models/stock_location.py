@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-# Copyright 2018-2022 ForgeFlow (https://www.forgeflow.com)
+# Copyright 2018 ForgeFlow (https://www.forgeflow.com)
 # @author Jordi Ballester <jordi.ballester@forgeflow.com.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
