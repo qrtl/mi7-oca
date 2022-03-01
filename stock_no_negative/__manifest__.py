@@ -6,13 +6,13 @@
 
 {
     'name': 'Stock Disallow Negative',
-    'version': '10.0.1.0.2',
+    'version': '10.0.2.0.0',
     'category': 'Inventory, Logistic, Storage',
     'license': 'AGPL-3',
     'summary': 'Disallow negative stock levels by default',
     'author': 'Akretion,Odoo Community Association (OCA)',
     'website': 'http://www.akretion.com',
     'depends': ['stock'],
-    'data': ['views/product.xml'],
+    'data': ['views/product.xml', 'views/stock_location.xml'],
     'installable': True,
 }
