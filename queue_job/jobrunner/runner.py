@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2015-2016 ACSONE SA/NV (<http://acsone.eu>)
 # Copyright 2015-2016 Camptocamp SA
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html)
@@ -11,7 +10,7 @@ available Odoo workers
 How does it work?
 -----------------
 
-* It starts as a thread in the Odoo main process
+* It starts as a thread in the Odoo main process or as a new worker
 * It receives postgres NOTIFY messages each time jobs are
   added or updated in the queue_job table.
 * It maintains an in-memory priority queue of jobs that
@@ -22,27 +21,23 @@ How does it work?
 How to use it?
 --------------
 
-* By default, the job runner will
+* Optionally adjust your configuration through environment variables:
 
-  - use ``root:1`` as channels configuration (one single channel)
-  - connect to Odoo via
-    - host ``xmlrpc_interface`` or ``localhost`` if unset
-    - port ``xmlrpc_port``, or ``8069`` if unset
-  - connect to the database via ``db_host`` and ``db_port``
+  - ``ODOO_QUEUE_JOB_CHANNELS=root:4`` (or any other channels
+    configuration), default ``root:1``.
+  - ``ODOO_QUEUE_JOB_SCHEME=https``, default ``http``.
+  - ``ODOO_QUEUE_JOB_HOST=load-balancer``, default ``http_interface``
+    or ``localhost`` if unset.
+  - ``ODOO_QUEUE_JOB_PORT=443``, default ``http_port`` or 8069 if unset.
+  - ``ODOO_QUEUE_JOB_HTTP_AUTH_USER=jobrunner``, default empty.
+  - ``ODOO_QUEUE_JOB_HTTP_AUTH_PASSWORD=s3cr3t``, default empty.
+  - ``ODOO_QUEUE_JOB_JOBRUNNER_DB_HOST=master-db``, default ``db_host``
+    or ``False`` if unset.
+  - ``ODOO_QUEUE_JOB_JOBRUNNER_DB_PORT=5432``, default ``db_port``
+    or ``False`` if unset.
 
-* To adjust these values, you can either use environment variables:
-
-  - ``ODOO_QUEUE_JOB_CHANNELS=root:4``
-  - ``ODOO_QUEUE_JOB_SCHEME=https``
-  - ``ODOO_QUEUE_JOB_HOST=load-balancer``
-  - ``ODOO_QUEUE_JOB_PORT=443``
-  - ``ODOO_QUEUE_JOB_HTTP_AUTH_USER=connector``
-  - ``ODOO_QUEUE_JOB_HTTP_AUTH_PASSWORD=s3cr3t``
-  - ``ODOO_QUEUE_JOB_JOBRUNNER_DB_HOST=master-db``
-  - ``ODOO_QUEUE_JOB_JOBRUNNER_DB_PORT=5432``
-
-* Or, alternatively, you can add a ``[queue_job]`` section
-  in Odoo's configuration file, like this:
+* Alternatively, configure the channels through the Odoo configuration
+  file, like:
 
 .. code-block:: ini
 
@@ -51,12 +46,12 @@ How to use it?
   scheme = https
   host = load-balancer
   port = 443
-  http_auth_user = connector
+  http_auth_user = jobrunner
   http_auth_password = s3cr3t
   jobrunner_db_host = master-db
   jobrunner_db_port = 5432
 
-* If using ``anybox.recipe.odoo``, add this to your buildout configuration:
+* Or, if using ``anybox.recipe.odoo``, add this to your buildout configuration:
 
 .. code-block:: ini
 
@@ -138,30 +133,28 @@ Caveat
        of running Odoo is obviously not for production purposes.
 """
 
-from contextlib import closing
 import datetime
 import logging
 import os
 import select
 import threading
 import time
+from contextlib import closing, contextmanager
 
 import psycopg2
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import requests
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 import odoo
 from odoo.tools import config
 
-from .channels import ChannelManager, PENDING, ENQUEUED, NOT_DONE
+from . import queue_job_config
+from .channels import ENQUEUED, NOT_DONE, PENDING, ChannelManager
 
 SELECT_TIMEOUT = 60
 ERROR_RECOVERY_DELAY = 5
 
 _logger = logging.getLogger(__name__)
-
-
-session = requests.Session()
 
 
 # Unfortunately, it is not possible to extend the Odoo
@@ -174,9 +167,9 @@ session = requests.Session()
 
 def _channels():
     return (
-        os.environ.get('ODOO_QUEUE_JOB_CHANNELS') or
-        config.misc.get("queue_job", {}).get("channels") or
-        "root:1"
+        os.environ.get("ODOO_QUEUE_JOB_CHANNELS")
+        or queue_job_config.get("channels")
+        or "root:1"
     )
 
 
@@ -194,10 +187,10 @@ def _odoo_now():
 def _connection_info_for(db_name):
     db_or_uri, connection_info = odoo.sql_db.connection_info_for(db_name)
 
-    for p in ('host', 'port'):
-        cfg = (os.environ.get('ODOO_QUEUE_JOB_JOBRUNNER_DB_%s' % p.upper()) or
-               config.misc
-               .get("queue_job", {}).get('jobrunner_db_' + p))
+    for p in ("host", "port"):
+        cfg = os.environ.get(
+            "ODOO_QUEUE_JOB_JOBRUNNER_DB_%s" % p.upper()
+        ) or queue_job_config.get("jobrunner_db_" + p)
 
         if cfg:
             connection_info[p] = cfg
@@ -206,17 +199,6 @@ def _connection_info_for(db_name):
 
 
 def _async_http_get(scheme, host, port, user, password, db_name, job_uuid):
-
-    if not session.cookies:
-        # obtain an anonymous session
-        _logger.info("obtaining an anonymous session for the job runner")
-        url = ('%s://%s:%s/queue_job/session' % (scheme, host, port))
-        auth = None
-        if user:
-            auth = (user, password)
-        response = session.get(url, timeout=30, auth=auth)
-        response.raise_for_status()
-
     # Method to set failed job (due to timeout, etc) as pending,
     # to avoid keeping it as enqueued.
     def set_job_pending():
@@ -227,22 +209,32 @@ def _async_http_get(scheme, host, port, user, password, db_name, job_uuid):
             cr.execute(
                 "UPDATE queue_job SET state=%s, "
                 "date_enqueued=NULL, date_started=NULL "
-                "WHERE uuid=%s and state=%s", (PENDING, job_uuid, ENQUEUED)
+                "WHERE uuid=%s and state=%s "
+                "RETURNING uuid",
+                (PENDING, job_uuid, ENQUEUED),
             )
+            if cr.fetchone():
+                _logger.warning(
+                    "state of job %s was reset from %s to %s",
+                    job_uuid,
+                    ENQUEUED,
+                    PENDING,
+                )
 
     # TODO: better way to HTTP GET asynchronously (grequest, ...)?
     #       if this was python3 I would be doing this with
     #       asyncio, aiohttp and aiopg
     def urlopen():
-        url = ('%s://%s:%s/queue_job/runjob?db=%s&job_uuid=%s' %
-               (scheme, host, port, db_name, job_uuid))
+        url = "{}://{}:{}/queue_job/runjob?db={}&job_uuid={}".format(
+            scheme, host, port, db_name, job_uuid
+        )
         try:
             auth = None
             if user:
                 auth = (user, password)
             # we are not interested in the result, so we set a short timeout
             # but not too short so we trap and log hard configuration errors
-            response = session.get(url, timeout=1, auth=auth)
+            response = requests.get(url, timeout=1, auth=auth)
 
             # raise_for_status will result in either nothing, a Client Error
             # for HTTP Response codes between 400 and 500 or a Server Error
@@ -250,17 +242,16 @@ def _async_http_get(scheme, host, port, user, password, db_name, job_uuid):
             response.raise_for_status()
         except requests.Timeout:
             set_job_pending()
-        except:
+        except Exception:
             _logger.exception("exception in GET %s", url)
-            session.cookies.clear()
             set_job_pending()
+
     thread = threading.Thread(target=urlopen)
     thread.daemon = True
     thread.start()
 
 
 class Database(object):
-
     def __init__(self, db_name):
         self.db_name = db_name
         connection_info = _connection_info_for(db_name)
@@ -271,78 +262,90 @@ class Database(object):
             self._initialize()
 
     def close(self):
+        # pylint: disable=except-pass
+        # if close fail for any reason, it's either because it's already closed
+        # and we don't care, or for any reason but anyway it will be closed on
+        # del
         try:
             self.conn.close()
-        except:
+        except Exception:
             pass
         self.conn = None
 
     def _has_queue_job(self):
         with closing(self.conn.cursor()) as cr:
-            cr.execute("SELECT 1 FROM pg_tables WHERE tablename=%s",
-                       ('ir_module_module',))
+            cr.execute(
+                "SELECT 1 FROM pg_tables WHERE tablename=%s", ("ir_module_module",)
+            )
             if not cr.fetchone():
+                _logger.debug("%s doesn't seem to be an odoo db", self.db_name)
                 return False
             cr.execute(
                 "SELECT 1 FROM ir_module_module WHERE name=%s AND state=%s",
-                ('queue_job', 'installed')
+                ("queue_job", "installed"),
             )
-            return cr.fetchone()
+            if not cr.fetchone():
+                _logger.debug("queue_job is not installed for db %s", self.db_name)
+                return False
+            cr.execute(
+                """SELECT COUNT(1)
+                FROM information_schema.triggers
+                WHERE event_object_table = %s
+                AND trigger_name = %s""",
+                ("queue_job", "queue_job_notify"),
+            )
+            if cr.fetchone()[0] != 3:  # INSERT, DELETE, UPDATE
+                _logger.error(
+                    "queue_job_notify trigger is missing in db %s", self.db_name
+                )
+                return False
+            return True
 
     def _initialize(self):
         with closing(self.conn.cursor()) as cr:
-            # this is the trigger that sends notifications when jobs change
-            cr.execute("""
-                DROP TRIGGER IF EXISTS queue_job_notify ON queue_job;
-
-                CREATE OR REPLACE
-                    FUNCTION queue_job_notify() RETURNS trigger AS $$
-                BEGIN
-                    IF TG_OP = 'DELETE' THEN
-                        IF OLD.state != 'done' THEN
-                            PERFORM pg_notify('queue_job', OLD.uuid);
-                        END IF;
-                    ELSE
-                        PERFORM pg_notify('queue_job', NEW.uuid);
-                    END IF;
-                    RETURN NULL;
-                END;
-                $$ LANGUAGE plpgsql;
-
-                CREATE TRIGGER queue_job_notify
-                    AFTER INSERT OR UPDATE OR DELETE
-                    ON queue_job
-                    FOR EACH ROW EXECUTE PROCEDURE queue_job_notify();
-            """)
             cr.execute("LISTEN queue_job")
 
+    @contextmanager
     def select_jobs(self, where, args):
-        query = ("SELECT channel, uuid, id as seq, date_created, "
-                 "priority, EXTRACT(EPOCH FROM eta), state "
-                 "FROM queue_job WHERE %s" %
-                 (where, ))
-        with closing(self.conn.cursor()) as cr:
+        # pylint: disable=sql-injection
+        # the checker thinks we are injecting values but we are not, we are
+        # adding the where conditions, values are added later properly with
+        # parameters
+        query = (
+            "SELECT channel, uuid, id as seq, date_created, "
+            "priority, EXTRACT(EPOCH FROM eta), state "
+            "FROM queue_job WHERE %s" % (where,)
+        )
+        with closing(self.conn.cursor("select_jobs", withhold=True)) as cr:
             cr.execute(query, args)
-            return list(cr.fetchall())
+            yield cr
+
+    def keep_alive(self):
+        query = "SELECT 1"
+        with closing(self.conn.cursor()) as cr:
+            cr.execute(query)
 
     def set_job_enqueued(self, uuid):
         with closing(self.conn.cursor()) as cr:
-            cr.execute("UPDATE queue_job SET state=%s, "
-                       "date_enqueued=date_trunc('seconds', "
-                       "                         now() at time zone 'utc') "
-                       "WHERE uuid=%s",
-                       (ENQUEUED, uuid))
+            cr.execute(
+                "UPDATE queue_job SET state=%s, "
+                "date_enqueued=date_trunc('seconds', "
+                "                         now() at time zone 'utc') "
+                "WHERE uuid=%s",
+                (ENQUEUED, uuid),
+            )
 
 
 class QueueJobRunner(object):
-
-    def __init__(self,
-                 scheme='http',
-                 host='localhost',
-                 port=8069,
-                 user=None,
-                 password=None,
-                 channel_config_string=None):
+    def __init__(
+        self,
+        scheme="http",
+        host="localhost",
+        port=8069,
+        user=None,
+        password=None,
+        channel_config_string=None,
+    ):
         self.scheme = scheme
         self.host = host
         self.port = port
@@ -356,9 +359,39 @@ class QueueJobRunner(object):
         self._stop = False
         self._stop_pipe = os.pipe()
 
+    @classmethod
+    def from_environ_or_config(cls):
+        scheme = os.environ.get("ODOO_QUEUE_JOB_SCHEME") or queue_job_config.get(
+            "scheme"
+        )
+        host = (
+            os.environ.get("ODOO_QUEUE_JOB_HOST")
+            or queue_job_config.get("host")
+            or config["http_interface"]
+        )
+        port = (
+            os.environ.get("ODOO_QUEUE_JOB_PORT")
+            or queue_job_config.get("port")
+            or config["http_port"]
+        )
+        user = os.environ.get("ODOO_QUEUE_JOB_HTTP_AUTH_USER") or queue_job_config.get(
+            "http_auth_user"
+        )
+        password = os.environ.get(
+            "ODOO_QUEUE_JOB_HTTP_AUTH_PASSWORD"
+        ) or queue_job_config.get("http_auth_password")
+        runner = cls(
+            scheme=scheme or "http",
+            host=host or "localhost",
+            port=port or 8069,
+            user=user,
+            password=password,
+        )
+        return runner
+
     def get_db_names(self):
-        if odoo.tools.config['db_name']:
-            db_names = odoo.tools.config['db_name'].split(',')
+        if config["db_name"]:
+            db_names = config["db_name"].split(",")
         else:
             db_names = odoo.service.db.exp_list(True)
         return db_names
@@ -369,50 +402,56 @@ class QueueJobRunner(object):
                 if remove_jobs:
                     self.channel_manager.remove_db(db_name)
                 db.close()
-            except:
-                _logger.warning('error closing database %s',
-                                db_name, exc_info=True)
+            except Exception:
+                _logger.warning("error closing database %s", db_name, exc_info=True)
         self.db_by_name = {}
 
     def initialize_databases(self):
         for db_name in self.get_db_names():
             db = Database(db_name)
-            if not db.has_queue_job:
-                _logger.debug('queue_job is not installed for db %s', db_name)
-            else:
+            if db.has_queue_job:
                 self.db_by_name[db_name] = db
-                for job_data in db.select_jobs('state in %s', (NOT_DONE,)):
-                    self.channel_manager.notify(db_name, *job_data)
-                _logger.info('queue job runner ready for db %s', db_name)
+                with db.select_jobs("state in %s", (NOT_DONE,)) as cr:
+                    for job_data in cr:
+                        self.channel_manager.notify(db_name, *job_data)
+                _logger.info("queue job runner ready for db %s", db_name)
 
     def run_jobs(self):
         now = _odoo_now()
         for job in self.channel_manager.get_jobs_to_run(now):
             if self._stop:
                 break
-            _logger.info("asking Odoo to run job %s on db %s",
-                         job.uuid, job.db_name)
+            _logger.info("asking Odoo to run job %s on db %s", job.uuid, job.db_name)
             self.db_by_name[job.db_name].set_job_enqueued(job.uuid)
-            _async_http_get(self.scheme,
-                            self.host,
-                            self.port,
-                            self.user,
-                            self.password,
-                            job.db_name,
-                            job.uuid)
+            _async_http_get(
+                self.scheme,
+                self.host,
+                self.port,
+                self.user,
+                self.password,
+                job.db_name,
+                job.uuid,
+            )
 
     def process_notifications(self):
         for db in self.db_by_name.values():
+            if not db.conn.notifies:
+                # If there are no activity in the queue_job table it seems that
+                # tcp keepalives are not sent (in that very specific scenario),
+                # causing some intermediaries (such as haproxy) to close the
+                # connection, making the jobrunner to restart on a socket error
+                db.keep_alive()
             while db.conn.notifies:
                 if self._stop:
                     break
                 notification = db.conn.notifies.pop()
                 uuid = notification.payload
-                job_datas = db.select_jobs('uuid = %s', (uuid,))
-                if job_datas:
-                    self.channel_manager.notify(db.db_name, *job_datas[0])
-                else:
-                    self.channel_manager.remove_job(uuid)
+                with db.select_jobs("uuid = %s", (uuid,)) as cr:
+                    job_datas = cr.fetchone()
+                    if job_datas:
+                        self.channel_manager.notify(db.db_name, *job_datas)
+                    else:
+                        self.channel_manager.remove_job(uuid)
 
     def wait_notification(self):
         for db in self.db_by_name.values():
@@ -449,7 +488,7 @@ class QueueJobRunner(object):
         _logger.info("graceful stop requested")
         self._stop = True
         # wakeup the select() in wait_notification
-        os.write(self._stop_pipe[1], '.')
+        os.write(self._stop_pipe[1], b".")
 
     def run(self):
         _logger.info("starting")
@@ -468,9 +507,13 @@ class QueueJobRunner(object):
                     self.wait_notification()
             except KeyboardInterrupt:
                 self.stop()
-            except:
-                _logger.exception("exception: sleeping %ds and retrying",
-                                  ERROR_RECOVERY_DELAY)
+            except InterruptedError:
+                # Interrupted system call, i.e. KeyboardInterrupt during select
+                self.stop()
+            except Exception:
+                _logger.exception(
+                    "exception: sleeping %ds and retrying", ERROR_RECOVERY_DELAY
+                )
                 self.close_databases()
                 time.sleep(ERROR_RECOVERY_DELAY)
         self.close_databases(remove_jobs=False)
