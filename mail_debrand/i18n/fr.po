@@ -1,36 +1,66 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * mail_debrand
+# 	* mail_debrand
 #
-# Translators:
-# Quentin THEURET <odoo@kerpeo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-26 01:46+0000\n"
-"PO-Revision-Date: 2018-02-26 01:46+0000\n"
-"Last-Translator: Quentin THEURET <odoo@kerpeo.com>, 2018\n"
-"Language-Team: French (https://www.transifex.com/oca/teams/23907/fr/)\n"
+"PO-Revision-Date: 2020-08-12 17:59+0000\n"
+"Last-Translator: Weblate Admin <weblate@odoo-community.org>\n"
+"Language-Team: none\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 3.10\n"
 
 #. module: mail_debrand
-#: model:ir.model,name:mail_debrand.model_mail_template
-msgid "Email Templates"
-msgstr "Modèles de courriel"
-
-#. module: mail_debrand
-#: code:addons/mail_debrand/models/mail_template.py:26
+#: code:addons/mail_debrand/tests/test_mail_debrand_digest.py:0
 #, python-format
-msgid "Odoo"
-msgstr "Odoo"
+msgid "Connect"
+msgstr ""
 
 #. module: mail_debrand
-#: code:addons/mail_debrand/models/mail_template.py:25
-#, python-format
-msgid "using"
-msgstr "utilisant"
+#: model:ir.model.fields,field_description:mail_debrand.field_mail_mail__display_name
+#: model:ir.model.fields,field_description:mail_debrand.field_mail_render_mixin__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: mail_debrand
+#: model:ir.model.fields,field_description:mail_debrand.field_mail_mail__id
+#: model:ir.model.fields,field_description:mail_debrand.field_mail_render_mixin__id
+msgid "ID"
+msgstr ""
+
+#. module: mail_debrand
+#: model:ir.model.fields,field_description:mail_debrand.field_mail_mail____last_update
+#: model:ir.model.fields,field_description:mail_debrand.field_mail_render_mixin____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: mail_debrand
+#: model:ir.model,name:mail_debrand.model_mail_render_mixin
+msgid "Mail Render Mixin"
+msgstr ""
+
+#. module: mail_debrand
+#: model:ir.model,name:mail_debrand.model_mail_mail
+msgid "Outgoing Mails"
+msgstr ""
+
+#~ msgid "Email Templates"
+#~ msgstr "Modèles d'emails"
+
+#~ msgid "Email Thread"
+#~ msgstr "Discussion par email"
+
+#~ msgid "Odoo"
+#~ msgstr "Odoo"
+
+#~ msgid "Powered by"
+#~ msgstr "Propulsé par"
+
+#~ msgid "using"
+#~ msgstr "utilisant"
