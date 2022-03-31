@@ -3,67 +3,68 @@
 # * auditlog
 #
 # Translators:
-# OCA Transbot <transbot@odoo-community.org>, 2016
+# Lukáš Spurný <lukasspurny8@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0c\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-26 01:45+0000\n"
-"PO-Revision-Date: 2016-11-26 01:45+0000\n"
-"Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2016\n"
-"Language-Team: Amharic (https://www.transifex.com/oca/teams/23907/am/)\n"
-"Language: am\n"
+"POT-Creation-Date: 2018-03-03 10:08+0000\n"
+"PO-Revision-Date: 2018-03-03 10:08+0000\n"
+"Last-Translator: Lukáš Spurný <lukasspurny8@gmail.com>, 2018\n"
+"Language-Team: Czech (Czech Republic) (https://www.transifex.com/oca/"
+"teams/23907/cs_CZ/)\n"
+"Language: cs_CZ\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__action_id
 msgid "Action"
-msgstr ""
+msgstr "Akce"
 
 #. module: auditlog
 #: model:ir.ui.menu,name:auditlog.menu_audit
 msgid "Audit"
-msgstr ""
+msgstr "Zkontrolovat"
 
 #. module: auditlog
 #: model:ir.model,name:auditlog.model_auditlog_autovacuum
 msgid "Auditlog - Delete old logs"
-msgstr ""
+msgstr "Zkontrolován protokol - Odstranění starých protokolů"
 
 #. module: auditlog
 #: model:ir.model,name:auditlog.model_auditlog_http_session
 msgid "Auditlog - HTTP User session log"
-msgstr ""
+msgstr "Zkontrolovaný- protokol návštěv uživatelů HTTP"
 
 #. module: auditlog
 #: model:ir.model,name:auditlog.model_auditlog_http_request
 msgid "Auditlog - HTTP request log"
-msgstr ""
+msgstr "Zkontrolovaný- protokol požadavků HTTP"
 
 #. module: auditlog
 #: model:ir.model,name:auditlog.model_auditlog_log
 msgid "Auditlog - Log"
-msgstr ""
+msgstr "Záznam auditu - protokol"
 
 #. module: auditlog
 #: model:ir.model,name:auditlog.model_auditlog_log_line
 msgid "Auditlog - Log details (fields updated)"
-msgstr ""
+msgstr "Auditlog - detaily protokolu (pole jsou aktualizovány)"
 
 #. module: auditlog
 #: model:ir.model,name:auditlog.model_auditlog_rule
 msgid "Auditlog - Rule"
-msgstr ""
+msgstr "Auditlog - Pravidlo"
 
 #. module: auditlog
 #: model:ir.actions.server,name:auditlog.ir_cron_auditlog_autovacuum_ir_actions_server
 #: model:ir.cron,cron_name:auditlog.ir_cron_auditlog_autovacuum
 #: model:ir.cron,name:auditlog.ir_cron_auditlog_autovacuum
 msgid "Auto-vacuum audit logs"
-msgstr ""
+msgstr "Auto-vakuové protokoly auditu"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__capture_record
@@ -73,7 +74,7 @@ msgstr ""
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__user_context
 msgid "Context"
-msgstr ""
+msgstr "Kontext"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__create_uid
@@ -83,7 +84,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__create_uid
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__create_uid
 msgid "Created by"
-msgstr "Creado por"
+msgstr "Vytvořil"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__create_date
@@ -95,18 +96,18 @@ msgstr "Creado por"
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_session_search
 msgid "Created on"
-msgstr "Creado en"
+msgstr "Vytvořeno"
 
 #. module: auditlog
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__field_description
 msgid "Description"
-msgstr ""
+msgstr "Popis"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__display_name
@@ -114,25 +115,25 @@ msgstr ""
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__display_name
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Zobrazit název"
 
 #. module: auditlog
 #: model:ir.model.fields.selection,name:auditlog.selection__auditlog_rule__state__draft
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_search
 msgid "Draft"
-msgstr ""
+msgstr "Návrh"
 
 #. module: auditlog
 #: model:ir.model.fields.selection,name:auditlog.selection__auditlog_log__log_type__fast
 #: model:ir.model.fields.selection,name:auditlog.selection__auditlog_rule__log_type__fast
 msgid "Fast log"
-msgstr ""
+msgstr "Rychlý protokol"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__field_id
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
 msgid "Field"
-msgstr ""
+msgstr "Pole"
 
 #. module: auditlog
 #: code:addons/auditlog/models/rule.py:0
@@ -144,13 +145,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log__line_ids
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_form
 msgid "Fields updated"
-msgstr ""
+msgstr "Pole byla aktualizována"
 
 #. module: auditlog
 #: model:ir.model.fields.selection,name:auditlog.selection__auditlog_log__log_type__full
 #: model:ir.model.fields.selection,name:auditlog.selection__auditlog_rule__log_type__full
 msgid "Full log"
-msgstr ""
+msgstr "Plný protokol"
 
 #. module: auditlog
 #: model:ir.model.fields,help:auditlog.field_auditlog_rule__log_type
@@ -160,6 +161,10 @@ msgid ""
 "Fast log: only log the changes made through the create and write operations "
 "(less information, but it is faster)"
 msgstr ""
+"Úplný protokol: proveďte rozdíl mezi daty před a po operaci (zaznamenávejte "
+"více informací, jako jsou vypočtená pole, která byla aktualizována, ale je "
+"pomalejší) Rychlý protokol: zaznamenávejte pouze změny provedené pomocí "
+"operací vytváření a zápisu (méně informací, ale je rychlejší)"
 
 #. module: auditlog
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
@@ -168,12 +173,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_search
 msgid "Group By..."
-msgstr ""
+msgstr "Skupina vytvořená..."
 
 #. module: auditlog
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_form
 msgid "HTTP Context"
-msgstr ""
+msgstr "Kontext HTTP"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log__http_request_id
@@ -182,7 +187,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
 msgid "HTTP Request"
-msgstr ""
+msgstr "Požadavek HTTP"
 
 #. module: auditlog
 #: model:ir.actions.act_window,name:auditlog.action_auditlog_http_request_tree
@@ -191,7 +196,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_session_form
 msgid "HTTP Requests"
-msgstr ""
+msgstr "Požadavky HTTP"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__id
@@ -211,7 +216,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line____last_update
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Poslední změna dne"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__write_uid
@@ -221,7 +226,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__write_uid
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__write_uid
 msgid "Last Updated by"
-msgstr "Última actualización por"
+msgstr "Naposledy aktualizováno"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__write_date
@@ -231,28 +236,28 @@ msgstr "Última actualización por"
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__write_date
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__write_date
 msgid "Last Updated on"
-msgstr "Última actualización en"
+msgstr "Poslední aktualizace dne"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__log_id
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_form
 msgid "Log"
-msgstr ""
+msgstr "Přihlásit se"
 
 #. module: auditlog
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_form
 msgid "Log - Field updated"
-msgstr ""
+msgstr "Protokol - pole je aktualizováno"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__log_create
 msgid "Log Creates"
-msgstr ""
+msgstr "Záznam vytvoří"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__log_unlink
 msgid "Log Deletes"
-msgstr ""
+msgstr "Záznam odstraní"
 
 #. module: auditlog
 #: model:ir.actions.act_window,name:auditlog.action_auditlog_line
@@ -265,12 +270,12 @@ msgstr ""
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__log_read
 msgid "Log Reads"
-msgstr ""
+msgstr "Záznamy čtení"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__log_write
 msgid "Log Writes"
-msgstr ""
+msgstr "Záznam zapíše"
 
 #. module: auditlog
 #: model:ir.actions.act_window,name:auditlog.action_auditlog_log_tree
@@ -279,13 +284,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_form
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
 msgid "Logs"
-msgstr ""
+msgstr "Záznamy"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log__method
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__method
 msgid "Method"
-msgstr ""
+msgstr "Metoda"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log__model_id
@@ -294,7 +299,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
 msgid "Model"
-msgstr ""
+msgstr "Model"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log__model_name
@@ -308,17 +313,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session__display_name
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__name
 msgid "Name"
-msgstr ""
+msgstr "Název"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__new_value
 msgid "New Value"
-msgstr ""
+msgstr "Nová hodnota"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__new_value_text
 msgid "New value Text"
-msgstr ""
+msgstr "Nový text hodnot"
 
 #. module: auditlog
 #: code:addons/auditlog/models/log.py:0
@@ -341,18 +346,18 @@ msgstr ""
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__old_value
 msgid "Old Value"
-msgstr ""
+msgstr "Stará hodnota"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__old_value_text
 msgid "Old value Text"
-msgstr ""
+msgstr "Stará hodnota textu"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__name
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
 msgid "Path"
-msgstr ""
+msgstr "Cesta"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log__res_id
@@ -360,36 +365,36 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
 msgid "Resource ID"
-msgstr ""
+msgstr "ID zdroje"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log__name
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__name
 msgid "Resource Name"
-msgstr ""
+msgstr "Název zdroje"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__root_url
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
 msgid "Root URL"
-msgstr ""
+msgstr "Kořenová adresa URL"
 
 #. module: auditlog
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_form
 msgid "Rule"
-msgstr ""
+msgstr "Pravidlo"
 
 #. module: auditlog
 #: model:ir.actions.act_window,name:auditlog.action_auditlog_rule_tree
 #: model:ir.ui.menu,name:auditlog.menu_action_auditlog_rule_tree
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_search
 msgid "Rules"
-msgstr ""
+msgstr "Pravidla"
 
 #. module: auditlog
 #: model:ir.model.fields,help:auditlog.field_auditlog_rule__model_id
 msgid "Select model for which you want to generate log."
-msgstr ""
+msgstr "Vyberte model, pro který chcete generovat protokol."
 
 #. module: auditlog
 #: model:ir.model.fields,help:auditlog.field_auditlog_rule__capture_record
@@ -402,6 +407,8 @@ msgid ""
 "Select this if you want to keep track of creation on any record of the model "
 "of this rule"
 msgstr ""
+"Tuto možnost vyberte, pokud chcete sledovat tvorbu na jakémkoli záznamu "
+"modelu tohoto pravidla"
 
 #. module: auditlog
 #: model:ir.model.fields,help:auditlog.field_auditlog_rule__log_unlink
@@ -409,6 +416,8 @@ msgid ""
 "Select this if you want to keep track of deletion on any record of the model "
 "of this rule"
 msgstr ""
+"Tuto možnost vyberte, pokud chcete sledovat odstranění v libovolném záznamu "
+"modelu tohoto pravidla"
 
 #. module: auditlog
 #: model:ir.model.fields,help:auditlog.field_auditlog_rule__log_write
@@ -416,6 +425,8 @@ msgid ""
 "Select this if you want to keep track of modification on any record of the "
 "model of this rule"
 msgstr ""
+"Tuto možnost vyberte, pokud chcete sledovat změny v záznamu modelu tohoto "
+"pravidla"
 
 #. module: auditlog
 #: model:ir.model.fields,help:auditlog.field_auditlog_rule__log_read
@@ -423,35 +434,37 @@ msgid ""
 "Select this if you want to keep track of read/open on any record of the "
 "model of this rule"
 msgstr ""
+"Tuto možnost vyberte, chcete-li sledovat čtení / otevření v libovolném "
+"záznamu modelu tohoto pravidla"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__http_session_id
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log__http_session_id
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__http_session_id
 msgid "Session"
-msgstr ""
+msgstr "Relace"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session__name
 msgid "Session ID"
-msgstr ""
+msgstr "ID relace"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__state
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_search
 msgid "State"
-msgstr ""
+msgstr "Stát"
 
 #. module: auditlog
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_form
 msgid "Subscribe"
-msgstr ""
+msgstr "odebírat"
 
 #. module: auditlog
 #: model:ir.model.fields.selection,name:auditlog.selection__auditlog_rule__state__subscribed
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_search
 msgid "Subscribed"
-msgstr ""
+msgstr "Přihlášené"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log__model_model
@@ -463,7 +476,7 @@ msgstr ""
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__field_name
 msgid "Technical name"
-msgstr ""
+msgstr "Technický název"
 
 #. module: auditlog
 #: code:addons/auditlog/models/log.py:0
@@ -483,18 +496,20 @@ msgid ""
 "There is already a rule defined on this model\n"
 "You cannot define another: please edit the existing one."
 msgstr ""
+"Na tomto modelu již bylo definováno pravidlo. Nelze definovat další: upravte "
+"stávající."
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log__log_type
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__log_type
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__log_type
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #. module: auditlog
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_form
 msgid "Unsubscribe"
-msgstr ""
+msgstr "Odhlásit odběr"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__user_id
@@ -506,7 +521,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
 msgid "User"
-msgstr ""
+msgstr "Uživatel"
 
 #. module: auditlog
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
@@ -514,32 +529,32 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
 msgid "User session"
-msgstr ""
+msgstr "Uživatelská relace"
 
 #. module: auditlog
 #: model:ir.actions.act_window,name:auditlog.action_auditlog_http_session_tree
 #: model:ir.ui.menu,name:auditlog.menu_action_auditlog_http_session_tree
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_session_search
 msgid "User sessions"
-msgstr ""
+msgstr "Uživatelské relace"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__user_ids
 msgid "Users"
-msgstr ""
+msgstr "Uživatelé"
 
 #. module: auditlog
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_form
 msgid "Values"
-msgstr ""
+msgstr "Hodnoty"
 
 #. module: auditlog
 #: code:addons/auditlog/models/rule.py:0
 #, python-format
 msgid "View logs"
-msgstr ""
+msgstr "Zobrazení protokolů"
 
 #. module: auditlog
 #: model:ir.model.fields,help:auditlog.field_auditlog_rule__user_ids
 msgid "if  User is not added then it will applicable for all users"
-msgstr ""
+msgstr "pokud uživatel není přidán, pak bude použitelný pro všechny uživatele"
