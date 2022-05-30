@@ -27,6 +27,7 @@
 
     <template id="confirmation_fee" inherit_id="website_sale.confirmation">
         <xpath expr="//a[@t-attf-href='/shop/product/#{ slug(line.product_id.product_tmpl_id) }']" position="replace">
+            <!-- line.is_delivery has been added to the original condition. -->
             <t t-if="line.payment_fee_line or line.is_delivery">
                 <strong t-esc="line.product_id.with_context(display_default_code=False).display_name"/>
             </t>

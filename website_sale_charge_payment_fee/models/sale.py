@@ -11,7 +11,7 @@ class SaleOrder(models.Model):
         for line in self.order_line:
             if line.payment_fee_line:
                 line.unlink()
-        acquirer = tx.acquirer_id
+        acquirer = tx.acquirer_id  # Changed by Pactera
         if acquirer.charge_fee:
             if acquirer.charge_fee_type == 'fixed':
                 price = acquirer.charge_fee_fixed_price
@@ -27,7 +27,7 @@ class SaleOrder(models.Model):
                     acquirer.charge_fee_percentage / 100.0
                 ) * self.amount_total
 
-            order_total = self.amount_total
+            order_total = self.amount_total  # Added by Pactera
             self.env['sale.order.line'].create({
                 'order_id': self.id,
                 'payment_fee_line': True,
@@ -40,8 +40,8 @@ class SaleOrder(models.Model):
                     (6, 0, [t.id for t in acquirer.charge_fee_tax_ids])
                 ],
             })
-            new_order_total = self.amount_total
-            tx.amount = tx.amount + new_order_total - order_total
+            new_order_total = self.amount_total  # Added by Pactera
+            tx.amount = tx.amount + new_order_total - order_total  # Added by Pactera.
 
 
 class SaleOrderLine(models.Model):
