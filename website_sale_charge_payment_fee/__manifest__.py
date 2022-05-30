@@ -14,7 +14,8 @@
     "application": False,
     "installable": True,
     "depends": [
-        "pro_mi7_website_sale_ec"
+        # "website_sale",
+        "website_sale_delivery",  # line.is_delivery
     ],
     "data": [
         "views/payment_view.xml",
