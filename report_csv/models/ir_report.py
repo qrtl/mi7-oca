@@ -11,6 +11,9 @@ class ReportAction(models.Model):
     report_type = fields.Selection(
         selection_add=[("csv", "csv")], ondelete={"csv": "set default"}
     )
+    encoding = fields.Char(help="Encoding to be applied to the generated CSV file. "
+        "e.g. cp932"
+    )
 
     @api.model
     def _render_csv(self, docids, data):
@@ -18,7 +21,9 @@ class ReportAction(models.Model):
         report_model = self.env.get(report_model_name)
         if report_model is None:
             raise UserError(_("%s model was not found") % report_model_name)
-        return report_model.with_context(active_model=self.model).create_csv_report(
+        return report_model.with_context(
+            active_model=self.model, encoding=self.encoding
+        ).create_csv_report(
             docids, data
         )
 
