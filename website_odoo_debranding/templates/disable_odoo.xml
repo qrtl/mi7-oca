@@ -12,4 +12,14 @@
             <div class="o_brand_promotion" />
         </xpath>
     </template>
+
+    <template
+        id="portal_debrand"
+        inherit_id="portal.portal_record_sidebar"
+        name="Remove Odoo Promotional Link"
+    >
+        <xpath expr="//div[hasclass('card-footer')]" position="replace">
+            <div class="card-footer" />
+        </xpath>
+    </template>
 </odoo>
