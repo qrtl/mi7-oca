@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 # Copyright 2017 LasLabs Inc.
+# Copyright 2021 Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo import _
@@ -14,18 +14,15 @@ def pre_init_hook_login_check(cr):
     """
     with cr.savepoint():
         users = []
-        conflict_logins = []
         cr.execute("SELECT login FROM res_users")
         for user in cr.fetchall():
             login = user[0].lower()
             if login not in users:
                 users.append(login)
             else:
-                conflict_logins.append(login)
-        if conflict_logins:
-            raise ValidationError(
-                _('Conflicting user logins exist for `%s`' % ','.join(conflict_logins))
-            )
+                raise ValidationError(
+                    _("Conflicting user logins exist for `%s`", login)
+                )
 
 
 def post_init_hook_login_convert(cr, registry):
