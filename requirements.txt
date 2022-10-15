@@ -1,2 +1,6 @@
-email-validator
-unicodecsv
+# generated from manifests external_dependencies
+email_validator
+lxml
+requests
+xlrd
+xlsxwriter
