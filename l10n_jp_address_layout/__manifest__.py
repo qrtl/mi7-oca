@@ -14,7 +14,7 @@
     ],
     "assets": {
         "web.assets_backend": [
-            "l10n_jp_address_layout/static/src/less/form_view.less",
+            "l10n_jp_address_layout/static/src/scss/form_view.scss",
         ],
     },
     "installable": True,
