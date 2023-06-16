@@ -15,7 +15,7 @@ class MailWizardInvite(models.TransientModel):
         if not res_model:
             res_model = self.env.context.get("default_res_model")
         parameter_name = "mail_restrict_follower_selection.domain"
-        key = "{}.{}".format(parameter_name, res_model)
+        "{}.{}".format(parameter_name, res_model)
         return (
             self.env["ir.config_parameter"]
             .sudo()
