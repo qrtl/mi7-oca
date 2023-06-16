@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <odoo>
 
 
@@ -7,34 +7,62 @@
             <t t-if="acquirer.charge_fee">
                 <span>(Fee:
                 <t t-if="acquirer.charge_fee_type == 'fixed'">
-                    <span id="charge_fee_fixed_price" t-field="acquirer.charge_fee_fixed_price" t-options='{"widget": "monetary", "display_currency": website.currency_id}'/>
+                    <span
+                            id="charge_fee_fixed_price"
+                            t-field="acquirer.charge_fee_fixed_price"
+                            t-options='{"widget": "monetary", "display_currency": website.currency_id}'
+                        />
                 </t>
                 <t t-if="acquirer.charge_fee_type == 'percentage'">
-                    <span id="charge_fee_percentage" t-field="acquirer.charge_fee_percentage"/> %
+                    <span
+                            id="charge_fee_percentage"
+                            t-field="acquirer.charge_fee_percentage"
+                        /> %
                 </t>
                 )</span>
             </t>
         </xpath>
         <xpath expr="//input[@t-att-value='acquirer.id']" position="attributes">
-            <attribute name="t-att-checked">acquirer == selected_acquirer if selected_acquirer else acquirers[0] == acquirer</attribute>
+            <attribute
+                name="t-att-checked"
+            >acquirer == selected_acquirer if selected_acquirer else acquirers[0] == acquirer</attribute>
         </xpath>
-        <xpath expr="//div[@t-if='not website_sale_order.amount_total']" position="after">
-            <input type="hidden" t-att-value="selected_acquirer.id if selected_acquirer else acquirers and acquirers[0].id or False"
-                   name="selected_acquirer_id"/>
+        <xpath
+            expr="//div[@t-if='not website_sale_order.amount_total']"
+            position="after"
+        >
+            <input
+                type="hidden"
+                t-att-value="selected_acquirer.id if selected_acquirer else acquirers and acquirers[0].id or False"
+                name="selected_acquirer_id"
+            />
         </xpath>
-        <xpath expr="//a[@t-attf-href='/shop/product/#{ slug(line.product_id.product_tmpl_id) }']" position="attributes">
+        <xpath
+            expr="//a[@t-attf-href='/shop/product/#{ slug(line.product_id.product_tmpl_id) }']"
+            position="attributes"
+        >
             <attribute name="t-if">not line.payment_fee_line</attribute>
         </xpath>
     </template>
 
     <template id="confirmation_fee" inherit_id="website_sale.confirmation">
-        <xpath expr="//a[@t-attf-href='/shop/product/#{ slug(line.product_id.product_tmpl_id) }']" position="replace">
+        <xpath
+            expr="//a[@t-attf-href='/shop/product/#{ slug(line.product_id.product_tmpl_id) }']"
+            position="replace"
+        >
             <t t-if="line.payment_fee_line or line.is_delivery">
-                <strong t-esc="line.product_id.with_context(display_default_code=False).display_name"/>
+                <strong
+                    t-esc="line.product_id.with_context(display_default_code=False).display_name"
+                />
             </t>
             <t t-if="not line.payment_fee_line and not line.is_delivery">
-                <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
-                  <strong class="item_code" t-esc="line.product_id.with_context(display_default_code=False).display_name"/>
+                <a
+                    t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }"
+                >
+                  <strong
+                        class="item_code"
+                        t-esc="line.product_id.with_context(display_default_code=False).display_name"
+                    />
                 </a>
             </t>
         </xpath>
@@ -43,13 +71,13 @@
     <record id="custom_customer_view_sale_order_inherit_form2" model="ir.ui.view">
         <field name="name">sale.order.form2</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
             <xpath expr="//tree/field[@name='discount_price']" position="after">
-                <field name="payment_fee_line"/>
+                <field name="payment_fee_line" />
             </xpath>
             <xpath expr="//form/group/group/field[@name='note']" position="after">
-            	<field name="payment_fee_line"/>
+            	<field name="payment_fee_line" />
             </xpath>
         </field>
     </record>
