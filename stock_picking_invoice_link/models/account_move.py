@@ -3,8 +3,9 @@
 # Copyright 2016 Pedro M. Baeza <pedro.baeza@tecnativa.com>
 # Copyright 2017 Jacques-Etienne Baudoux <je@bcim.be>
 # Copyright 2020 Manuel Calero - Tecnativa
-# Copyright 2022 Antony Herrera - looerp
 # License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
+
+from collections import defaultdict
 
 from odoo import api, fields, models
 
@@ -40,8 +41,9 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         form_view_name = "stock.view_picking_form"
-        action = self.env.ref("stock.action_picking_tree_all")
-        result = action.read()[0]
+        result = self.env["ir.actions.act_window"]._for_xml_id(
+            "stock.action_picking_tree_all"
+        )
         if len(self.picking_ids) > 1:
             result["domain"] = "[('id', 'in', %s)]" % self.picking_ids.ids
         else:
@@ -49,6 +51,24 @@ class AccountMove(models.Model):
             result["views"] = [(form_view.id, "form")]
             result["res_id"] = self.picking_ids.id
         return result
+
+    def _reverse_move_vals(self, default_values, cancel=True):
+        move_vals = super()._reverse_move_vals(default_values, cancel=cancel)
+        product_dic = defaultdict(int)
+        # Invoice returned moves marked as to_refund
+        for line_command in move_vals.get("line_ids", []):
+            line_vals = line_command[2]
+            product_id = line_vals.get("product_id", False)
+            if product_id:
+                position = product_dic[product_id]
+                product_line = self.line_ids.filtered(
+                    lambda l: l.product_id.id == product_id
+                )[position]
+                product_dic[product_id] += 1
+                stock_moves = product_line.mapped("move_line_ids")
+                if stock_moves:
+                    line_vals["move_line_ids"] = [(4, m.id) for m in stock_moves]
+        return move_vals
 
 
 class AccountMoveLine(models.Model):
@@ -62,12 +82,19 @@ class AccountMoveLine(models.Model):
         string="Related Stock Moves",
         readonly=True,
         copy=False,
-        help="Related stock moves (only when the invoice has been "
-        "generated from a sale order).",
+        help="Related stock moves (only when the invoice has been"
+        " generated from a sale order).",
     )
 
-    # pylint: disable=W8110
-    def _copy_data_extend_business_fields(self, values):
-        # OVERRIDE to copy the 'move_line_ids' field as well.
-        super()._copy_data_extend_business_fields(values)
-        values["move_line_ids"] = [(6, None, self.move_line_ids.ids)]
+    def copy_data(self, default=None):
+        """Copy the move_line_ids in case of refund invoice creating a new invoice
+        (refund_method="modify").
+        """
+        self.ensure_one()
+        res = super().copy_data(default=default)
+        if (
+            self.env.context.get("force_copy_stock_moves")
+            and "move_line_ids" not in res
+        ):
+            res[0]["move_line_ids"] = [(6, 0, self.move_line_ids.ids)]
+        return res
