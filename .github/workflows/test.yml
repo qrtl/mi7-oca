@@ -19,6 +19,10 @@ jobs:
       matrix:
         include:
           - container: ghcr.io/oca/oca-ci/py3.8-ocb15.0:latest
+            include: "partner_company_default"
+            name: test with OCB
+          - container: ghcr.io/oca/oca-ci/py3.8-ocb15.0:latest
+            exclude: "partner_company_default"
             name: test with OCB
     services:
       postgres:
@@ -29,6 +33,9 @@ jobs:
           POSTGRES_DB: odoo
         ports:
           - 5432:5432
+    env:
+      INCLUDE: "${{ matrix.include }}"
+      EXCLUDE: "${{ matrix.exclude }}"
     steps:
       - uses: actions/checkout@v2
         with:

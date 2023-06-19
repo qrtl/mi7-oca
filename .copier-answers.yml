@@ -14,7 +14,8 @@ include_wkhtmltopdf: false
 odoo_version: 15.0
 org_name: Odoo Community Association (OCA)
 org_slug: OCA
-rebel_module_groups: []
+rebel_module_groups:
+- partner_company_default
 repo_description: null
 repo_name: null
 repo_slug: null
