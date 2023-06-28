@@ -14,5 +14,4 @@ class ResPartner(models.Model):
         # The context value is set in the create method of res.company
         if self.env.context.get("creating_from_company"):
             vals["company_id"] = False
-
         return super(ResPartner, self).create(vals)
