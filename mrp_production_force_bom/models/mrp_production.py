@@ -28,7 +28,13 @@ class MrpProduction(models.Model):
 
     def _check_component_discrepancies(self, error_messages):
         # Get all the components and their quantities using explode()
-        _, lines_done = self.bom_id.explode(self.product_id, self.product_qty)
+        factor = (
+            self.product_uom_id._compute_quantity(
+                self.product_qty, self.bom_id.product_uom_id
+            )
+            / self.bom_id.product_qty
+        )
+        _, lines_done = self.bom_id.explode(self.product_id, factor)
         expected_components = {}
         for line, data in lines_done:
             product_id = line.product_id.id
