@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import _, api, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 from odoo.tools import config
 
 
@@ -22,7 +22,7 @@ class MailMessage(models.Model):
                 vals.get("model") not in subtype.allow_send_model_ids.mapped("model")
                 and not subtype.internal
             ):
-                raise ValidationError(
+                raise UserError(
                     _(
                         "Creating a message in this model is blocked."
                         "Please contact the system administrator as necessary."
