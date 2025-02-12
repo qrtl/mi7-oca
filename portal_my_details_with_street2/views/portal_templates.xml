@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_details_with_street2" inherit_id="portal_my_details">
+        <xpath expr="//div[contains(@class, 'form-group') and contains(@class, 'col-xl-6')][1]"
+            position="after">
+            <div t-attf-class="form-group #{error.get('street2') and 'o_has_error' or ''} col-xl-6">
+                <label class="col-form-label" for="street2">Street2</label>
+                <input type="text" name="street2" t-attf-class="form-control #{error.get('street2') and 'is-invalid' or ''}"
+                    t-att-value="street2 or partner.street2" />
+            </div>
+        </xpath>
+    </template>
+</odoo>
