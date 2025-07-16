@@ -3,3 +3,4 @@ email_validator
 lxml
 odoo_test_helper
 requests
+zxcvbn
