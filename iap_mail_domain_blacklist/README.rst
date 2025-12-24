@@ -56,16 +56,27 @@ Configuration
 2. Search for "Mail Domain Blacklist" and enter the domains you want to blacklist, separated  
    by commas.  
 
+Server configuration
+~~~~~~~~~~~~~~~~~~~~~
+
+In the odoo.conf file, set db_list = True to allow listing all databases.
+In this case, blacklist domains from all databases will affect every database.
+Set db_list = False and explicitly define db_name if you want to load only
+the target database. In this case, blacklist domains will affect only that
+database.
+
 Note: Every time you update the "Mail Domain Blacklist," you need to restart the Odoo server
 for the change to take effect.
 
 Known issues / Roadmap
 ======================
 
-Due to a technical limitation, we cannot use http.db_list() to respect dbfilter
-during module loading, as HTTP configuration is not available at that stage.
-Therefore, db.list_dbs() is used instead. As a result, blacklist domains from inactive databases
-will also affect running databases.
+Due to a technical limitation, http.db_list() cannot be used during module
+loading to respect dbfilter, because the HTTP layer is not initialized at
+that stage. As a result, the module must rely on config.get('db_name') or
+db.list_dbs() instead. Consequently, if list_db = True is enabled without
+explicitly setting db_name in odoo.conf, blacklist domains from inactive
+databases may incorrectly affect active databases.
 
 Bug Tracker
 ===========
