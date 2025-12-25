@@ -1,10 +1,12 @@
-This module assigns the current website to partners used by website forms and ensures
-partner lookup and assignment are restricted to that website.
+This module is intended for use when the “Specific User Account” setting is enabled
+on a website.
 
-In standard Odoo, partner searches triggered from the website may lead to incorrect
-assignments. For example, the partner assignment does not take the website into
-account and may assign the wrong partner when “Specific User Account” is enabled,
-which allows a separate user account to be created for each website even if they share
-the same email address.
+It assigns the current website to partners used by website forms and ensures partner
+lookup and assignment are restricted to that website.
+
+In standard Odoo, partner resolution from website forms does not consider the
+current website. When “Specific User Account” is enabled, this may result in a
+partner from another website being assigned if the same email address exists
+across multiple websites.
 
 This module addresses this issue.
