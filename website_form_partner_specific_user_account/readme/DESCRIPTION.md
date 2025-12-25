@@ -1,5 +1,5 @@
-This module considers the current website when searching for a partner from
-website-originated actions.
+This module assigns the current website to partners used by website forms and ensures
+partner lookup and assignment are restricted to that website.
 
 In standard Odoo, partner searches triggered from the website may lead to incorrect
 assignments. For example, the partner assignment does not take the website into
