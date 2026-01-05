@@ -19,7 +19,8 @@ class MailMessage(models.Model):
         if vals.get("message_type") == "comment":
             subtype = self.env["mail.message.subtype"].browse(vals.get("subtype_id"))
             if (
-                vals.get("model") not in subtype.allow_send_model_ids.mapped("model")
+                vals.get("model")
+                not in subtype.sudo().allow_send_model_ids.mapped("model")
                 and not subtype.internal
             ):
                 raise UserError(
