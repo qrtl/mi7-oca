@@ -372,8 +372,10 @@ ul.auto-toc {
 <p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Beta" src="https://img.shields.io/badge/maturity-Beta-yellow.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/licence-AGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/OCA/social/tree/15.0/iap_mail_domain_blacklist"><img alt="OCA/social" src="https://img.shields.io/badge/github-OCA%2Fsocial-lightgray.png?logo=github" /></a> <a class="reference external image-reference" href="https://translation.odoo-community.org/projects/social-15-0/social-15-0-iap_mail_domain_blacklist"><img alt="Translate me on Weblate" src="https://img.shields.io/badge/weblate-Translate%20me-F47D42.png" /></a> <a class="reference external image-reference" href="https://runboat.odoo-community.org/builds?repo=OCA/social&amp;target_branch=15.0"><img alt="Try me on Runboat" src="https://img.shields.io/badge/runboat-Try%20me-875A7B.png" /></a></p>
 <p>This module allows adding domains to the mail domain blacklist to prevent Odoo from assuming
 that users with the same domain belong to the same organization.</p>
-<p>Blacklist domains are shared across all effective databases of the server,
-which are the databases that this Odoo instance is configured to serve.</p>
+<p>Blacklisted domains are shared across all effective databases on the server.
+When the db_name parameter is set, the effective database is assumed to be the
+value of that parameter. If db_name is not set and list_db is true, all
+databases on the instance are considered effective databases.</p>
 <p><strong>Table of contents</strong></p>
 <div class="contents local topic" id="contents">
 <ul class="simple">

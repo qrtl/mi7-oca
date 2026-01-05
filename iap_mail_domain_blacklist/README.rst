@@ -31,8 +31,11 @@ IAP Mail Domain BlackList
 This module allows adding domains to the mail domain blacklist to prevent Odoo from assuming  
 that users with the same domain belong to the same organization.
 
-Blacklist domains are shared across all effective databases of the server,
-which are the databases that this Odoo instance is configured to serve.
+
+Blacklisted domains are shared across all effective databases on the server.
+When the db_name parameter is set, the effective database is assumed to be the
+value of that parameter. If db_name is not set and list_db is true, all
+databases on the instance are considered effective databases.
 
 **Table of contents**
 
