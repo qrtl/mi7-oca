@@ -28,16 +28,16 @@ Website Form Partner Specific User Account
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
-This module assigns the current website to partners used by website
-forms and ensures partner lookup and assignment are restricted to that
-website.
+This module is intended for use when the “Specific User Account” setting
+is enabled on a website.
 
-In standard Odoo, partner searches triggered from the website may lead
-to incorrect assignments. For example, the partner assignment does not
-take the website into account and may assign the wrong partner when
-“Specific User Account” is enabled, which allows a separate user account
-to be created for each website even if they share the same email
-address.
+It assigns the current website to partners used by website forms and
+ensures partner lookup and assignment are restricted to that website.
+
+In standard Odoo, partner resolution from website forms does not
+consider the current website. When “Specific User Account” is enabled,
+this may result in a partner from another website being assigned if the
+same email address exists across multiple websites.
 
 This module addresses this issue.
 
@@ -46,11 +46,29 @@ This module addresses this issue.
 .. contents::
    :local:
 
+Configuration
+=============
+
+To enable company-based partner isolation for website forms:
+
+-  Go to Website → Configuration → Websites.
+-  Open the website you want to configure.
+-  Enable Restrict Partner to Company.
+
+   -  When enabled, partner lookup and creation from website forms will
+      be limited to the website’s company.
+   -  Only partners belonging to that company will be matched, and any
+      newly created partners will be assigned to the same company.
+
 Known issues / Roadmap
 ======================
 
 Partner email is currently inferred from multiple possible form fields
 (email_from, partner_email, email).
+
+Note: The module assigns the current website to partners missing
+``website_id``, affecting not only newly created partners from website
+forms but also existing partners when they are used in a website form.
 
 Bug Tracker
 ===========
@@ -76,6 +94,7 @@ Contributors
 -  ``Quartile <https://www.quartile.co>``\ \_\_:
 
    -  Aung Ko Ko Lin
+   -  Yoshi Tashiro
 
 Maintainers
 -----------
