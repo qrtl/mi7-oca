@@ -49,10 +49,9 @@ class TestWebsiteFormSimple(TransactionCase):
             {
                 "name": "Partner",
                 "email": "test1@example.com",
+                "company_id": False,
             }
         )
-        # Clear the default company assignment, if any module assigns it
-        partner.company_id = False
         WebsiteForm().insert_record(
             self._req(self.website_1),
             "res.partner",
@@ -75,9 +74,9 @@ class TestWebsiteFormSimple(TransactionCase):
                 "name": "Original",
                 "email": "test2@example.com",
                 "website_id": self.website_1.id,
+                "company_id": False,
             }
         )
-        original.company_id = False
         WebsiteForm().insert_record(
             self._req(self.website_2),
             "res.partner",
@@ -95,9 +94,11 @@ class TestWebsiteFormSimple(TransactionCase):
             ],
             limit=1,
         )
-
         self.assertTrue(website_partner)
         self.assertNotEqual(website_partner, original)
+        # Compare against website_2's company instead of using assertFalse,
+        # because another module may assign a default company.
+        # In this test environment, the current company is base.main_company.
         self.assertNotEqual(website_partner.company_id, self.website_2.company_id)
 
     @patch(
@@ -111,6 +112,7 @@ class TestWebsiteFormSimple(TransactionCase):
                 "name": "Original",
                 "email": "test3@example.com",
                 "website_id": self.website_1.id,
+                "company_id": False,
             }
         )
         original.company_id = False
