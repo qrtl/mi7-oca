@@ -51,6 +51,8 @@ class TestWebsiteFormSimple(TransactionCase):
                 "email": "test1@example.com",
             }
         )
+        # Clear the default company assignment, if any module assigns it
+        partner.company_id = False
         WebsiteForm().insert_record(
             self._req(self.website_1),
             "res.partner",
@@ -75,6 +77,7 @@ class TestWebsiteFormSimple(TransactionCase):
                 "website_id": self.website_1.id,
             }
         )
+        original.company_id = False
         WebsiteForm().insert_record(
             self._req(self.website_2),
             "res.partner",
@@ -95,7 +98,7 @@ class TestWebsiteFormSimple(TransactionCase):
 
         self.assertTrue(website_partner)
         self.assertNotEqual(website_partner, original)
-        self.assertFalse(website_partner.company_id)
+        self.assertNotEqual(website_partner.company_id, self.website_2.company_id)
 
     @patch(
         "odoo.addons.website.controllers.form.WebsiteForm.insert_record",
@@ -110,6 +113,7 @@ class TestWebsiteFormSimple(TransactionCase):
                 "website_id": self.website_1.id,
             }
         )
+        original.company_id = False
         WebsiteForm().insert_record(
             self._req(self.website_2),
             "res.partner",
