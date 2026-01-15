@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="param_mail_thread_last_update_target_models" model="ir.config_parameter">
+        <field name="key">mail_thread_last_update.target_models</field>
+        <field name="value"></field>
+    </record>
+    <record id="param_mail_thread_last_update_message_types" model="ir.config_parameter">
+        <field name="key">mail_thread_last_update.message_types</field>
+        <field name="value"></field>
+    </record>
+</odoo>
