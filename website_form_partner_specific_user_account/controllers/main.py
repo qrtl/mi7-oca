@@ -40,10 +40,10 @@ class WebsiteForm(WebsiteForm):
             if website.restrict_partner_to_company:
                 domain.append(("company_id", "=", website.company_id.id))
             website_partner = Partner.search(domain, limit=1)
-            if not website_partner and values.get("partner_name"):
+            if not website_partner:
                 vals = {
                     "email": email,
-                    "name": values.get("partner_name"),
+                    "name": values.get("partner_name", False),
                     "website_id": website.id,
                 }
                 if website.restrict_partner_to_company:
