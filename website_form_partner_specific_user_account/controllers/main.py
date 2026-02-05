@@ -49,9 +49,8 @@ class WebsiteForm(WebsiteForm):
                 if website.restrict_partner_to_company:
                     vals["company_id"] = website.company_id.id
                 website_partner = Partner.create(vals)
-            if website_partner:
-                values["partner_id"] = website_partner.id
-                partner = website_partner
+            values["partner_id"] = website_partner.id
+            partner = website_partner
         # Intended for newly created partners, but applies to any partner without website_id
         if not partner.website_id:
             partner.website_id = website.id
