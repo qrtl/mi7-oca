@@ -16,23 +16,25 @@ class Base(models.AbstractModel):
         return tree.xpath('./field[@name="name"]')
 
     @api.model
-    def fields_view_get(
+    def _fields_view_get(
         self, view_id=None, view_type="form", toolbar=False, submenu=False
     ):
-        res = super(Base, self).fields_view_get(
+        res = super(Base, self)._fields_view_get(
             view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu
         )
-        arch = etree.fromstring(res["arch"])
-        model = self.env["ir.model"]._get(self._name)
-        if view_type == "tree" and model.add_open_tab_field:
-            id_elem = """<field name="id" widget="open_tab" nolabel="1"/>"""
-            id_elem = etree.fromstring(id_elem)
-            tree = arch.xpath("//tree")[0]
-            name_field = self._get_name_field(tree)
-            if name_field:
+        if view_type == "tree":
+            model = self.env["ir.model"]._get(self._name)
+            if model.add_open_tab_field and res.get("arch"):
+                arch = etree.fromstring(res["arch"])
+                id_elem = """<field name="id" widget="open_tab" nolabel="1"/>"""
+                id_elem = etree.fromstring(id_elem)
                 tree = arch.xpath("//tree")[0]
-                tree.insert(name_field[0].getparent().index(name_field[0]) + 1, id_elem)
-            else:
-                tree.insert(0, id_elem)
-        res["arch"] = etree.tostring(arch, encoding="utf-8")
+                name_field = self._get_name_field(tree)
+                if name_field:
+                    tree.insert(
+                        name_field[0].getparent().index(name_field[0]) + 1, id_elem
+                    )
+                else:
+                    tree.insert(0, id_elem)
+                res["arch"] = etree.tostring(arch, encoding="unicode")
         return res
