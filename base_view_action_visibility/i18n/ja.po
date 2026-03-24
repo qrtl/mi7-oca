@@ -1,0 +1,57 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_view_action_visibility
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-15 03:37+0000\n"
+"PO-Revision-Date: 2026-04-15 03:37+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: base_view_action_visibility
+#: model:ir.model,name:base_view_action_visibility.model_base
+msgid "Base"
+msgstr "ベース"
+
+#. module: base_view_action_visibility
+#: model:ir.model.fields,field_description:base_view_action_visibility.field_ir_model__delete_allowed_group_ids
+msgid "Delete Allowed Groups"
+msgstr "削除許可グループ"
+
+#. module: base_view_action_visibility
+#: model:ir.model.fields,field_description:base_view_action_visibility.field_ir_model__duplicate_allowed_group_ids
+msgid "Duplicate Allowed Groups"
+msgstr "複製許可グループ"
+
+#. module: base_view_action_visibility
+#: model:ir.model,name:base_view_action_visibility.model_ir_model
+msgid "Models"
+msgstr "モデル"
+
+#. module: base_view_action_visibility
+#: model:ir.model.fields,help:base_view_action_visibility.field_ir_model__delete_allowed_group_ids
+msgid ""
+"Restrict the 'Delete' action in form, tree, and kanban views to these "
+"groups. Leave empty to allow all users to delete records."
+msgstr ""
+"フォーム、ツリー、かんばんビューの「削除」アクションをこれらのグループに制限します。空のままにすると、全ユーザがレコードを削除できます。"
+
+#. module: base_view_action_visibility
+#: model:ir.model.fields,help:base_view_action_visibility.field_ir_model__duplicate_allowed_group_ids
+msgid ""
+"Restrict the 'Duplicate' action in form views to these groups. Leave empty "
+"to allow all users to duplicate records."
+msgstr ""
+"フォームビューの「複製」アクションをこれらのグループに制限します。空のままにすると、全ユーザがレコードを複製できます。"
+
+#. module: base_view_action_visibility
+#: model_terms:ir.ui.view,arch_db:base_view_action_visibility.ir_model_view_form
+msgid "View Action Visibility"
+msgstr "ビューアクション表示設定"
