@@ -10,14 +10,15 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-02 10:22+0000\n"
-"PO-Revision-Date: 2018-03-02 10:22+0000\n"
-"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>, 2018\n"
+"PO-Revision-Date: 2023-10-09 07:53+0000\n"
+"Last-Translator: jans23 <jan@suhr.org>\n"
 "Language-Team: German (https://www.transifex.com/oca/teams/23907/de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.17\n"
 
 #. module: sale_automatic_workflow
 #: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_order__all_qty_delivered
@@ -48,6 +49,11 @@ msgstr ""
 #. module: sale_automatic_workflow
 #: model:ir.filters,name:sale_automatic_workflow.automatic_workflow_order_filter
 msgid "Automatic Workflow Order Filter"
+msgstr ""
+
+#. module: sale_automatic_workflow
+#: model:ir.filters,name:sale_automatic_workflow.automatic_workflow_payment_filter
+msgid "Automatic Workflow Payment Filter"
 msgstr ""
 
 #. module: sale_automatic_workflow
@@ -128,6 +134,11 @@ msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__payment_filter_domain
+msgid "Domain"
+msgstr ""
+
+#. module: sale_automatic_workflow
 #: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__invoice_date_is_order_date
 msgid "Force Invoice Date"
 msgstr "Rechnungsdatum erzwingen"
@@ -158,7 +169,7 @@ msgstr ""
 
 #. module: sale_automatic_workflow
 #: model:ir.model,name:sale_automatic_workflow.model_account_move
-msgid "Journal Entries"
+msgid "Journal Entry"
 msgstr ""
 
 #. module: sale_automatic_workflow
@@ -210,6 +221,16 @@ msgid "Picking Filter Domain"
 msgstr ""
 
 #. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__register_payment
+msgid "Register Payment"
+msgstr ""
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__payment_filter_id
+msgid "Register Payment Invoice Filter"
+msgstr ""
+
+#. module: sale_automatic_workflow
 #: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__sale_done
 msgid "Sale Done"
 msgstr ""
@@ -226,7 +247,9 @@ msgstr ""
 
 #. module: sale_automatic_workflow
 #: model:ir.model,name:sale_automatic_workflow.model_sale_workflow_process
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_account_bank_statement_line__workflow_process_id
 #: model:ir.model.fields,field_description:sale_automatic_workflow.field_account_move__workflow_process_id
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_account_payment__workflow_process_id
 #: model:ir.model.fields,field_description:sale_automatic_workflow.field_stock_picking__workflow_process_id
 msgid "Sale Workflow Process"
 msgstr "Verkaufs-Workflow"
@@ -252,6 +275,11 @@ msgstr "Verkaufsteam"
 msgid ""
 "Scheduler that will play automatically the validation of invoices, "
 "pickings..."
+msgstr ""
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__send_order_confirmation_mail
+msgid "Send Order Confirmation Mail"
 msgstr ""
 
 #. module: sale_automatic_workflow
@@ -282,7 +310,7 @@ msgstr ""
 #. module: sale_automatic_workflow
 #: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__validate_invoice
 msgid "Validate Invoice"
-msgstr "KommissionierscheiPrüfe Rechnung"
+msgstr "Prüfe Rechnung"
 
 #. module: sale_automatic_workflow
 #: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__validate_invoice_filter_id
@@ -303,6 +331,13 @@ msgstr "Prüfe Auftrag"
 #: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__warning
 msgid "Warning Message"
 msgstr "Hinweismeldung"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,help:sale_automatic_workflow.field_sale_workflow_process__send_order_confirmation_mail
+msgid ""
+"When checked, after order confirmation, a confirmation email will be sent "
+"(if not already sent)."
+msgstr ""
 
 #. module: sale_automatic_workflow
 #: model:ir.model.fields,help:sale_automatic_workflow.field_sale_workflow_process__invoice_date_is_order_date
