@@ -6,6 +6,11 @@ import base64
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 
+PNG_DATA = (
+    b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8"
+    b"z8DwHwAFAAH/q842iQAAAABJRU5ErkJggg=="
+)
+
 
 class TestAttachmentMimetypeRestriction(TransactionCase):
     @classmethod
@@ -62,6 +67,20 @@ class TestAttachmentMimetypeRestriction(TransactionCase):
         self.company.attachment_allowed_mimetypes = "image/png"
         with self.assertRaises(ValidationError):
             attachment.write({"datas": base64.b64encode(b"updated content")})
+
+    def test_binary_field_storage_not_restricted(self):
+        self.company.attachment_allowed_mimetypes = "text/plain"
+        self.partner.image_1920 = PNG_DATA
+        attachment = self.Attachment.sudo().search(
+            [
+                ("res_model", "=", "res.partner"),
+                ("res_id", "=", self.partner.id),
+                ("res_field", "=", "image_1920"),
+            ]
+        )
+        self.assertEqual(attachment.mimetype, "image/png")
+        self.partner.image_1920 = PNG_DATA
+        self.assertTrue(attachment.exists())
 
     def test_message_post_filters_blocked_attachments(self):
         self.company.attachment_allowed_mimetypes = "text/html"

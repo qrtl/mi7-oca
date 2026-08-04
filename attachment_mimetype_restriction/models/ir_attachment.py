@@ -43,6 +43,8 @@ class IrAttachment(models.Model):
     def _validate_mimetype_from_vals(self, vals):
         if self.env.context.get("install_mode"):
             return
+        if vals.get("res_field"):
+            return
         # Skip framework-generated assets: compiled bundles (detected at create
         # by res_model='ir.ui.view' + public=True, since their /web/assets/ url
         # is only set in a later write) and customized scss/js overrides (which
@@ -79,6 +81,7 @@ class IrAttachment(models.Model):
                     "mimetype": vals.get("mimetype", record.mimetype),
                     "res_model": vals.get("res_model", record.res_model),
                     "res_id": vals.get("res_id", record.res_id),
+                    "res_field": vals.get("res_field", record.res_field),
                     "url": vals.get("url", record.url),
                     "company_id": vals.get(
                         "company_id",
