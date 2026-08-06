@@ -1,28 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * auditlog
+# 	* auditlog
 #
-# Translators:
-# OCA Transbot <transbot@odoo-community.org>, 2017
-# Pedro Castro Silva <pedrocs@sossia.pt>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-01 02:43+0000\n"
-"PO-Revision-Date: 2017-08-01 02:43+0000\n"
-"Last-Translator: Pedro Castro Silva <pedrocs@sossia.pt>, 2017\n"
-"Language-Team: Portuguese (https://www.transifex.com/oca/teams/23907/pt/)\n"
-"Language: pt\n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: \n"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__action_id
 msgid "Action"
-msgstr "Ação"
+msgstr ""
 
 #. module: auditlog
 #: model:ir.ui.menu,name:auditlog.menu_audit
@@ -90,7 +84,7 @@ msgstr ""
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__user_context
 msgid "Context"
-msgstr "Contexto"
+msgstr ""
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__create_uid
@@ -101,7 +95,7 @@ msgstr "Contexto"
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__create_uid
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__create_uid
 msgid "Created by"
-msgstr "Criado por"
+msgstr ""
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__create_date
@@ -114,19 +108,19 @@ msgstr "Criado por"
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_session_search
 msgid "Created on"
-msgstr "Criado em"
+msgstr ""
 
 #. module: auditlog
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
 msgid "Date"
-msgstr "Data"
+msgstr ""
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__field_description
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__field_description
 msgid "Description"
-msgstr "Descrição"
+msgstr ""
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__display_name
@@ -135,13 +129,13 @@ msgstr "Descrição"
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__display_name
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__display_name
 msgid "Display Name"
-msgstr "Nome"
+msgstr ""
 
 #. module: auditlog
 #: model:ir.model.fields.selection,name:auditlog.selection__auditlog_rule__state__draft
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_search
 msgid "Draft"
-msgstr "Rascunho"
+msgstr ""
 
 #. module: auditlog
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_form
@@ -187,10 +181,8 @@ msgstr ""
 #. module: auditlog
 #: model:ir.model.fields,help:auditlog.field_auditlog_rule__log_type
 msgid ""
-"Full log: make a diff between the data before and after the operation (log "
-"more info like computed fields which were updated, but it is slower)\n"
-"Fast log: only log the changes made through the create and write operations "
-"(less information, but it is faster)"
+"Full log: make a diff between the data before and after the operation (log more info like computed fields which were updated, but it is slower)\n"
+"Fast log: only log the changes made through the create and write operations (less information, but it is faster)"
 msgstr ""
 
 #. module: auditlog
@@ -200,7 +192,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_search
 msgid "Group By..."
-msgstr "Agrupar por..."
+msgstr ""
 
 #. module: auditlog
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_form
@@ -234,7 +226,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__id
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum____last_update
@@ -245,7 +237,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view____last_update
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule____last_update
 msgid "Last Modified on"
-msgstr "Última Modificação Em"
+msgstr ""
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__write_uid
@@ -256,7 +248,7 @@ msgstr "Última Modificação Em"
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__write_uid
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__write_uid
 msgid "Last Updated by"
-msgstr "Última Modificação Por"
+msgstr ""
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__write_date
@@ -267,14 +259,14 @@ msgstr "Última Modificação Por"
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__write_date
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__write_date
 msgid "Last Updated on"
-msgstr "Última Atualização Em"
+msgstr ""
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__log_id
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__log_id
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_form
 msgid "Log"
-msgstr "Registo"
+msgstr ""
 
 #. module: auditlog
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_form
@@ -326,7 +318,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log__method
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__method
 msgid "Method"
-msgstr "Método"
+msgstr ""
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log__model_id
@@ -335,7 +327,7 @@ msgstr "Método"
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
 msgid "Model"
-msgstr "Modelo"
+msgstr ""
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__model_model
@@ -355,7 +347,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__name
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__name
 msgid "Name"
-msgstr "Nome"
+msgstr ""
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__new_value
@@ -443,7 +435,7 @@ msgstr ""
 #: model:ir.ui.menu,name:auditlog.menu_action_auditlog_rule_tree
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_search
 msgid "Rules"
-msgstr "Regras"
+msgstr ""
 
 #. module: auditlog
 #: model:ir.model.fields,help:auditlog.field_auditlog_rule__model_id
@@ -458,15 +450,15 @@ msgstr ""
 #. module: auditlog
 #: model:ir.model.fields,help:auditlog.field_auditlog_rule__log_create
 msgid ""
-"Select this if you want to keep track of creation on any record of the model "
-"of this rule"
+"Select this if you want to keep track of creation on any record of the model"
+" of this rule"
 msgstr ""
 
 #. module: auditlog
 #: model:ir.model.fields,help:auditlog.field_auditlog_rule__log_unlink
 msgid ""
-"Select this if you want to keep track of deletion on any record of the model "
-"of this rule"
+"Select this if you want to keep track of deletion on any record of the model"
+" of this rule"
 msgstr ""
 
 #. module: auditlog
@@ -505,7 +497,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__state
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_search
 msgid "State"
-msgstr "Estado"
+msgstr ""
 
 #. module: auditlog
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_form
@@ -554,7 +546,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__log_type
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__log_type
 msgid "Type"
-msgstr "Tipo"
+msgstr ""
 
 #. module: auditlog
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_form
@@ -571,7 +563,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
 msgid "User"
-msgstr "Utilizador"
+msgstr ""
 
 #. module: auditlog
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
@@ -591,7 +583,7 @@ msgstr ""
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__user_ids
 msgid "Users"
-msgstr "Utilizadores"
+msgstr ""
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__users_to_exclude_ids

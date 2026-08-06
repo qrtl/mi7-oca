@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools.safe_eval import safe_eval
 
 
 class AuditlogLog(models.Model):
@@ -16,11 +17,16 @@ class AuditlogLog(models.Model):
     model_name = fields.Char(readonly=True)
     model_model = fields.Char(string="Technical Model Name", readonly=True)
     res_id = fields.Integer("Resource ID")
+    res_ids = fields.Char("Resource IDs")
     user_id = fields.Many2one("res.users", string="User")
     method = fields.Char(size=64)
     line_ids = fields.One2many("auditlog.log.line", "log_id", string="Fields updated")
-    http_session_id = fields.Many2one("auditlog.http.session", string="Session")
-    http_request_id = fields.Many2one("auditlog.http.request", string="HTTP Request")
+    http_session_id = fields.Many2one(
+        "auditlog.http.session", string="Session", index=True
+    )
+    http_request_id = fields.Many2one(
+        "auditlog.http.request", string="HTTP Request", index=True
+    )
     log_type = fields.Selection(
         [("full", "Full log"), ("fast", "Fast log")], string="Type"
     )
@@ -45,6 +51,15 @@ class AuditlogLog(models.Model):
             vals.update({"model_name": model.name, "model_model": model.model})
         return super().write(vals)
 
+    def show_res_ids(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "view_mode": "tree,form",
+            "res_model": self.model_id.model,
+            "domain": [("id", "in", safe_eval(self.res_ids))],
+        }
+
 
 class AuditlogLogLine(models.Model):
     _name = "auditlog.log.line"
@@ -62,17 +77,6 @@ class AuditlogLogLine(models.Model):
     new_value_text = fields.Text("New value Text")
     field_name = fields.Char("Technical name", readonly=True)
     field_description = fields.Char("Description", readonly=True)
-    # From log auditlog.log
-    name = fields.Char(related="log_id.name", store=True)
-    model_id = fields.Many2one(related="log_id.model_id", store=True)
-    model_name = fields.Char(related="log_id.model_name", store=True)
-    model_model = fields.Char(related="log_id.model_model", store=True)
-    res_id = fields.Integer(related="log_id.res_id", store=True)
-    user_id = fields.Many2one(related="log_id.user_id", store=True)
-    method = fields.Char(related="log_id.method", store=True)
-    http_session_id = fields.Many2one(related="log_id.http_session_id", store=True)
-    http_request_id = fields.Many2one(related="log_id.http_request_id", store=True)
-    log_type = fields.Selection(related="log_id.log_type", store=True)
 
     @api.model_create_multi
     def create(self, vals_list):
