@@ -25,12 +25,14 @@ class Base(models.AbstractModel):
         arch = etree.fromstring(res["arch"])
         model = self.env["ir.model"]._get(self._name)
         if view_type == "tree" and model.add_open_tab_field:
+            res.setdefault("fields", {})
+            if "id" not in res["fields"]:
+                res["fields"].update(self.fields_get(["id"]))
             id_elem = """<field name="id" widget="open_tab" nolabel="1"/>"""
             id_elem = etree.fromstring(id_elem)
             tree = arch.xpath("//tree")[0]
             name_field = self._get_name_field(tree)
             if name_field:
-                tree = arch.xpath("//tree")[0]
                 tree.insert(name_field[0].getparent().index(name_field[0]) + 1, id_elem)
             else:
                 tree.insert(0, id_elem)
