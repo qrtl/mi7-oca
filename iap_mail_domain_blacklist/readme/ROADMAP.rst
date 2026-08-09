@@ -1,4 +1,6 @@
-Due to a technical limitation, we cannot use http.db_list() to respect dbfilter
-during module loading, as HTTP configuration is not available at that stage.
-Therefore, db.list_dbs() is used instead. As a result, blacklist domains from inactive databases
-will also affect running databases.
+Due to a technical limitation, http.db_list() cannot be used during module
+loading to respect dbfilter, because the HTTP layer is not initialized at
+that stage. As a result, the module must rely on config.get('db_name') or
+db.list_dbs() instead. Consequently, if list_db = True is enabled without
+explicitly setting db_name in odoo.conf, blacklist domains from inactive
+databases may incorrectly affect active databases.

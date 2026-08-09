@@ -31,8 +31,10 @@ IAP Mail Domain BlackList
 This module allows adding domains to the mail domain blacklist to prevent Odoo from assuming  
 that users with the same domain belong to the same organization.
 
-Due to the nature of this module, in a multi-tenant setting, the configuration in one database
-affects all databases in the Odoo instance.
+Blacklisted domains are shared across all effective databases on the server.
+When the db_name parameter is set, the effective databases are assumed to be the
+values of that parameter. If db_name is not set and list_db is true, all
+databases on the instance are considered effective databases.
 
 **Table of contents**
 
@@ -62,10 +64,12 @@ for the change to take effect.
 Known issues / Roadmap
 ======================
 
-Due to a technical limitation, we cannot use http.db_list() to respect dbfilter
-during module loading, as HTTP configuration is not available at that stage.
-Therefore, db.list_dbs() is used instead. As a result, blacklist domains from inactive databases
-will also affect running databases.
+Due to a technical limitation, http.db_list() cannot be used during module
+loading to respect dbfilter, because the HTTP layer is not initialized at
+that stage. As a result, the module must rely on config.get('db_name') or
+db.list_dbs() instead. Consequently, if list_db = True is enabled without
+explicitly setting db_name in odoo.conf, blacklist domains from inactive
+databases may incorrectly affect active databases.
 
 Bug Tracker
 ===========

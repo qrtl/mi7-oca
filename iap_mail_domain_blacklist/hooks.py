@@ -3,8 +3,10 @@
 
 import logging
 
+from odoo.exceptions import AccessDenied
 from odoo.service import db
 from odoo.sql_db import db_connect
+from odoo.tools import config
 
 from odoo.addons.iap.tools import iap_tools
 
@@ -33,8 +35,17 @@ def update_mail_domain_blacklist(cr):
         iap_tools._MAIL_DOMAIN_BLACKLIST.update(additional_domains)
 
 
+def _db_names():
+    if config.get("db_name"):
+        return [n.strip() for n in config["db_name"].split(",") if n.strip()]
+    try:
+        return db.list_dbs()
+    except AccessDenied:
+        return []
+
+
 def post_load_hook():
-    for db_name in db.list_dbs():
+    for db_name in _db_names():
         try:
             with db_connect(db_name).cursor() as cr:
                 update_mail_domain_blacklist(cr)
