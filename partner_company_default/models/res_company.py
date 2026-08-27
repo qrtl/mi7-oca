@@ -10,5 +10,4 @@ class ResCompany(models.Model):
     @api.model
     def create(self, vals):
         self = self.with_context(creating_from_company=True)
-        company = super(ResCompany, self).create(vals)
-        return company
+        return super().create(vals)

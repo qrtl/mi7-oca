@@ -44,12 +44,21 @@
                                 name="capture_record"
                                 attrs="{'invisible':['|' ,('log_type','!=', 'full'), ('log_unlink','!=', True)]}"
                             />
+                            <field
+                                name="users_to_exclude_ids"
+                                widget="many2many_tags"
+                            />
+                            <field
+                                name="fields_to_exclude_ids"
+                                widget="many2many_tags"
+                            />
                         </group>
                         <group colspan="1">
                             <field name="log_read" />
                             <field name="log_write" />
                             <field name="log_unlink" />
                             <field name="log_create" />
+                            <field name="log_export_data" />
                         </group>
                     </group>
                 </sheet>
@@ -71,6 +80,7 @@
                 <field name="log_write" />
                 <field name="log_unlink" />
                 <field name="log_create" />
+                <field name="log_export_data" />
                 <field name="state" />
             </tree>
         </field>
@@ -123,6 +133,16 @@
         <field name="arch" type="xml">
             <form string="Log">
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="show_res_ids"
+                            type="object"
+                            class="oe_stat_button"
+                            attrs="{'invisible': [('res_ids', '=', False)]}"
+                            icon="fa-external-link"
+                            string="Exported Records"
+                        />
+                    </div>
                     <group string="Log">
                         <group colspan="1">
                             <field name="create_date" readonly="1" />
@@ -142,7 +162,16 @@
                                 attrs="{'invisible': [('model_id', '!=', False)]}"
                                 readonly="1"
                             />
-                            <field name="res_id" readonly="1" />
+                            <field
+                                name="res_id"
+                                readonly="1"
+                                attrs="{'invisible': [('res_id', '=', 0)]}"
+                            />
+                            <field
+                                name="res_ids"
+                                readonly="1"
+                                attrs="{'invisible': [('res_ids', '=', False)]}"
+                            />
                             <field name="name" readonly="1" />
                         </group>
                     </group>
@@ -260,7 +289,7 @@
     <!-- auditlog.log.line -->
     <record model="ir.ui.view" id="view_auditlog_line_tree">
         <field name="name">view.auditlog.line.tree</field>
-        <field name="model">auditlog.log.line</field>
+        <field name="model">auditlog.log.line.view</field>
         <field name="arch" type="xml">
             <tree create="0">
                 <field name="create_date" optional="show" />
@@ -284,7 +313,7 @@
     </record>
     <record id="view_auditlog_line_search" model="ir.ui.view">
         <field name="name">auditlog.line.search</field>
-        <field name="model">auditlog.log.line</field>
+        <field name="model">auditlog.log.line.view</field>
         <field name="arch" type="xml">
             <search string="Log Lines">
                 <field name="name" />
@@ -340,7 +369,7 @@
     </record>
     <record id="action_auditlog_line" model="ir.actions.act_window">
         <field name="name">Log Lines</field>
-        <field name="res_model">auditlog.log.line</field>
+        <field name="res_model">auditlog.log.line.view</field>
         <field name="view_mode">tree</field>
         <field name="search_view_id" ref="view_auditlog_line_search" />
         <field name="context">{'search_default_group_by_model_id': 1}</field>
