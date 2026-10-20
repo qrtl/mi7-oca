@@ -7,7 +7,7 @@
 
 {
     "name": "Stock Picking Invoice Link",
-    "version": "15.0.1.0.3",
+    "version": "15.0.1.3.1",
     "development_status": "Production/Stable",
     "category": "Warehouse Management",
     "summary": "Adds link between pickings and invoices",
