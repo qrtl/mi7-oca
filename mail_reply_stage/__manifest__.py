@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 {
     "name": "Mail Reply Stage",
+    "summary": "Update record stage when a non-internal user replies",
     "category": "Mail",
     "version": "15.0.1.0.0",
     "author": "Quartile, Odoo Community Association (OCA)",
@@ -12,5 +13,6 @@
         "security/ir.model.access.csv",
         "views/mail_reply_config_views.xml",
     ],
+    "maintainers": ["yostashiro", "aungkokolin1997"],
     "installable": True,
 }
