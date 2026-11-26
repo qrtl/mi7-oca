@@ -14,15 +14,18 @@ from odoo.addons.web.controllers.main import Binary
 class BinaryExtended(Binary):
     @http.route()
     def upload_attachment(self, model, id, ufile, callback=None):
-        result = super().upload_attachment(model, id, ufile, callback)
+        response = super().upload_attachment(model, id, ufile, callback)
         mimetype_error = getattr(request, "mimetype_error", None)
-        if mimetype_error and isinstance(result, str):
-            result = result.replace(
-                json.dumps(_("Something horrible happened")),
-                json.dumps(mimetype_error),
-                1,
+        if mimetype_error:
+            data = response.get_data(as_text=True)
+            response.set_data(
+                data.replace(
+                    json.dumps(_("Something horrible happened")),
+                    json.dumps(mimetype_error),
+                    1,
+                )
             )
-        return result
+        return response
 
 
 class DiscussControllerExtended(DiscussController):
