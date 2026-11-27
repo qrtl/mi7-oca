@@ -53,6 +53,13 @@ class IrAttachment(models.Model):
             "url"
         ):
             return
+        if vals.get("res_model") == "mail.compose.message":
+            # Composer drafts are checked against their target thread: at upload
+            # when the route knows it, otherwise when message_post moves them.
+            target = self.env.context.get("attachment_mimetype_target")
+            if not target:
+                return
+            vals = dict(vals, res_model=target[0], res_id=target[1])
         mimetype = self._compute_mimetype(vals)
         res_model = vals.get("res_model")
         company_id = self._resolve_attachment_company_id(vals)

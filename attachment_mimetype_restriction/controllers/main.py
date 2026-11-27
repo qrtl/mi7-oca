@@ -33,6 +33,10 @@ class DiscussControllerExtended(DiscussController):
     def mail_attachment_upload(
         self, ufile, thread_id, thread_model, is_pending=False, **kwargs
     ):
+        request.context = dict(
+            request.context,
+            attachment_mimetype_target=(thread_model, int(thread_id)),
+        )
         try:
             return super().mail_attachment_upload(
                 ufile, thread_id, thread_model, is_pending, **kwargs

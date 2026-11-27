@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 import base64
+from email.message import EmailMessage
 
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
@@ -56,6 +57,19 @@ class TestAttachmentMimetypeRestriction(TransactionCase):
             res_model="res.partner", res_id=self.partner.id
         )
         self.assertTrue(attachment)
+        # Composer drafts follow the target model's list, not the company's.
+        draft_vals = {
+            "name": "draft.txt",
+            "datas": base64.b64encode(b"draft"),
+            "res_model": "mail.compose.message",
+            "res_id": 0,
+        }
+        self.Attachment.with_context(
+            attachment_mimetype_target=("res.partner", self.partner.id)
+        ).create(draft_vals)
+        draft = self.Attachment.create(draft_vals)
+        self.partner.message_post(body="<p>Test</p>", attachment_ids=[draft.id])
+        self.assertEqual(draft.res_model, "res.partner")
 
     def test_per_model_empty_falls_through_to_global(self):
         self.company.attachment_allowed_mimetypes = "image/png"
@@ -64,6 +78,9 @@ class TestAttachmentMimetypeRestriction(TransactionCase):
             self._create_text_attachment(
                 res_model="res.partner", res_id=self.partner.id
             )
+        draft = self._create_text_attachment(res_model="mail.compose.message", res_id=0)
+        with self.assertRaises(ValidationError):
+            self.partner.message_post(body="<p>Test</p>", attachment_ids=[draft.id])
 
     def test_write_revalidates_on_datas_change(self):
         self.company.attachment_allowed_mimetypes = "text/plain"
@@ -88,18 +105,23 @@ class TestAttachmentMimetypeRestriction(TransactionCase):
         self.assertTrue(attachment.exists())
 
     def test_message_post_filters_blocked_attachments(self):
-        self.company.attachment_allowed_mimetypes = "text/html"
+        self.company.attachment_allowed_mimetypes = "text/html,message/rfc822"
+        forwarded = EmailMessage()
+        forwarded.set_content("forwarded body")
         self.partner.message_post(
             body="<p>Email</p>",
             attachments=[
                 ("blocked.txt", b"blocked content"),
                 ("allowed.html", b"<html>allowed</html>"),
+                ("forwarded.eml", forwarded),
             ],
         )
         attachments = self.Attachment.search(
             [("res_model", "=", "res.partner"), ("res_id", "=", self.partner.id)]
         )
-        self.assertEqual(attachments.mapped("name"), ["allowed.html"])
+        self.assertEqual(
+            set(attachments.mapped("name")), {"allowed.html", "forwarded.eml"}
+        )
         notice = (
             self.env["mail.message"]
             .search([("res_id", "=", self.partner.id), ("model", "=", "res.partner")])
