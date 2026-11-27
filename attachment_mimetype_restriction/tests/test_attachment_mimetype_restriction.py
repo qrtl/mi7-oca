@@ -81,6 +81,23 @@ class TestAttachmentMimetypeRestriction(TransactionCase):
         draft = self._create_text_attachment(res_model="mail.compose.message", res_id=0)
         with self.assertRaises(ValidationError):
             self.partner.message_post(body="<p>Test</p>", attachment_ids=[draft.id])
+        # Portal drafts are checked at upload, as they can be served by token.
+        portal_user = self.env["res.users"].create(
+            {
+                "name": "Portal",
+                "login": "portal_mimetype",
+                "groups_id": [(6, 0, [self.env.ref("base.group_portal").id])],
+            }
+        )
+        with self.assertRaises(ValidationError):
+            self.Attachment.with_user(portal_user).sudo().create(
+                {
+                    "name": "portal.txt",
+                    "datas": base64.b64encode(b"portal"),
+                    "res_model": "mail.compose.message",
+                    "res_id": 0,
+                }
+            )
 
     def test_write_revalidates_on_datas_change(self):
         self.company.attachment_allowed_mimetypes = "text/plain"
